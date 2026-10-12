@@ -104,7 +104,7 @@ export const importFromLink = createServerFn({ method: "POST" })
         if (img.ok && /^image\/(jpeg|png|webp|gif)/.test(type)) {
           const buf = await img.arrayBuffer();
           if (buf.byteLength < 10 * 1024 * 1024) {
-            const ext = type.split("/")[1].replace("jpeg", "jpg");
+            const ext = (type.split("/")[1] ?? "jpg").replace("jpeg", "jpg");
             const path = `${context.userId}/import-${Date.now()}.${ext}`;
             const up = await context.supabase.storage.from("media").upload(path, buf, { contentType: type });
             if (!up.error) {

@@ -49,7 +49,7 @@ function ContentList() {
   });
 
   const update = useMutation({
-    mutationFn: async ({ id, patch, label }: { id: string; patch: Partial<Row>; label: string }) => {
+    mutationFn: async ({ id, patch, label }: { id: string; patch: { status?: Row["status"]; is_breaking?: boolean; is_featured?: boolean; is_trending?: boolean }; label: string }) => {
       const { error } = await supabase.from("articles").update(patch).eq("id", id);
       if (error) throw error;
       await logActivity(label, "article", id);

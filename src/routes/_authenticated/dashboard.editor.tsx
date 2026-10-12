@@ -137,7 +137,7 @@ function Editor() {
 
   async function save(nextStatus?: Status) {
     const parsed = formSchema.safeParse(f);
-    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
     const status = nextStatus ?? f.status;
     if (status === "published" && !f.body.trim() && !f.video_url && !f.facebook_url && !f.summary.trim())
       return toast.error("Add story text, a summary or a video before publishing.");

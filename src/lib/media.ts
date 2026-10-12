@@ -31,7 +31,7 @@ export function isFacebookUrl(url: string) {
 
 export function youtubeId(url: string): string | null {
   const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : null;
+  return m?.[1] ?? null;
 }
 
 export function getEmbed(url?: string | null): Embed {

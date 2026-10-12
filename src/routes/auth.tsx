@@ -46,7 +46,7 @@ function AuthPage() {
     e.preventDefault();
     setNotice(null);
     const em = emailS.safeParse(email);
-    if (!em.success) return toast.error(em.error.issues[0].message);
+    if (!em.success) return toast.error(em.error.issues[0]?.message ?? "Invalid input");
     setBusy(true);
     try {
       if (mode === "forgot") {
@@ -56,10 +56,10 @@ function AuthPage() {
         return;
       }
       const pw = passS.safeParse(password);
-      if (!pw.success) return toast.error(pw.error.issues[0].message);
+      if (!pw.success) return toast.error(pw.error.issues[0]?.message ?? "Invalid input");
       if (mode === "up") {
         const nm = z.string().trim().min(2, "Enter your full name").max(100).safeParse(name);
-        if (!nm.success) return toast.error(nm.error.issues[0].message);
+        if (!nm.success) return toast.error(nm.error.issues[0]?.message ?? "Invalid input");
         const { data, error } = await supabase.auth.signUp({
           email: em.data,
           password: pw.data,

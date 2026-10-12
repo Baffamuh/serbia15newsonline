@@ -49,7 +49,7 @@ function SettingsPage() {
 
   async function save() {
     const p = schema.safeParse(f);
-    if (!p.success) return toast.error(p.error.issues[0].message);
+    if (!p.success) return toast.error(p.error.issues[0]?.message ?? "Invalid input");
     const v = Object.fromEntries(Object.entries(p.data).map(([k, x]) => [k, x === "" ? null : x])) as Record<string, string | null>;
     const { error } = await supabase.from("site_settings").update({ ...v, live_title: p.data.live_title, updated_at: new Date().toISOString() }).eq("id", 1);
     if (error) return toast.error(error.message);
