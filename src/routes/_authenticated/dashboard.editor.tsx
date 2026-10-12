@@ -6,7 +6,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Facebook, Link2, Upload, Loader2, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { importFromLink, type ImportResult } from "@/lib/import.functions";
+import { getImportConfig, importFromLink, type ImportResult } from "@/lib/import.functions";
 import { logActivity, useAuth } from "@/lib/auth";
 import { getEmbed, slugify, uploadMedia } from "@/lib/media";
 import { EmbedPlayer } from "@/components/site/EmbedPlayer";
@@ -114,13 +114,20 @@ function Editor() {
     }
   }
 
-  function useAsEmbed() {
+  async function useAsEmbed() {
     const u = z.string().trim().url().safeParse(link);
     if (!u.success) return toast.error("Paste a full link first");
-    const isFb = /facebook\.com|fb\.watch/.test(u.data);
-    if (isFb) set("facebook_url", u.data);
-    else set("video_url", u.data);
-    const isVid = /\/videos?\/|\/reel\/|fb\.watch|\/watch|youtu|\/share\/v\//i.test(u.data);
+    let url = u.data;
+    const isFb = /facebook\.com|fb\.watch|fb\.me/i.test(url);
+    if (isFb) {
+      try {
+        const r = await runImport({ data: { url } });
+        url = r.normalizedUrl;
+        setResult(r);
+      } catch { /* keep pasted link */ }
+      set("facebook_url", url);
+    } else set("video_url", url);
+    const isVid = /\/videos?\/|\/reels?\/|fb\.watch|\/watch|youtu|\/share\/[vr]\//i.test(url);
     if (isVid && f.format === "article") set("format", "video");
     toast.success("Link attached as an embed. Add a headline and save.");
   }

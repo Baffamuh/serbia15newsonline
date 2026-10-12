@@ -21,12 +21,14 @@ export async function uploadMedia(file: File): Promise<string> {
 export type Embed =
   | { kind: "youtube"; src: string }
   | { kind: "facebook-video"; src: string }
+  | { kind: "facebook-reel"; src: string }
   | { kind: "facebook-post"; src: string }
+  | { kind: "facebook-page"; src: string }
   | { kind: "file"; src: string }
   | { kind: "none" };
 
 export function isFacebookUrl(url: string) {
-  return /^https?:\/\/([a-z0-9-]+\.)?(facebook\.com|fb\.watch|fb\.com)\//i.test(url);
+  return /^https?:\/\/([a-z0-9-]+\.)?(facebook\.com|fb\.watch|fb\.com|fb\.me)\//i.test(url);
 }
 
 export function youtubeId(url: string): string | null {
@@ -40,10 +42,15 @@ export function getEmbed(url?: string | null): Embed {
   if (yt) return { kind: "youtube", src: `https://www.youtube-nocookie.com/embed/${yt}` };
   if (isFacebookUrl(url)) {
     const enc = encodeURIComponent(url);
-    const isVideo = /\/videos?\/|\/watch|fb\.watch|\/reel\/|\/share\/v\/|\/share\/r\//i.test(url);
-    return isVideo
-      ? { kind: "facebook-video", src: `https://www.facebook.com/plugins/video.php?href=${enc}&show_text=false&width=734` }
-      : { kind: "facebook-post", src: `https://www.facebook.com/plugins/post.php?href=${enc}&show_text=true&width=500` };
+    let path = "";
+    try { path = new URL(url).pathname.toLowerCase(); } catch { /* ignore */ }
+    if (/\/reels?\/|^\/share\/r\//.test(path))
+      return { kind: "facebook-reel", src: `https://www.facebook.com/plugins/video.php?href=${enc}&show_text=false&width=360` };
+    if (/\/videos?\/|^\/watch|^\/share\/v\//.test(path) || /fb\.watch/i.test(url))
+      return { kind: "facebook-video", src: `https://www.facebook.com/plugins/video.php?href=${enc}&show_text=false&width=734` };
+    if (path === "/profile.php" || /^\/p\/[^/]+\/?$/.test(path) || /^\/[^/]+\/?$/.test(path))
+      return { kind: "facebook-page", src: `https://www.facebook.com/plugins/page.php?href=${enc}&tabs=timeline&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=false` };
+    return { kind: "facebook-post", src: `https://www.facebook.com/plugins/post.php?href=${enc}&show_text=true&width=500` };
   }
   if (/^https:\/\//.test(url)) return { kind: "file", src: url };
   return { kind: "none" };
