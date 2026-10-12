@@ -14,4 +14,4 @@
 - Scheduling is enforced by RLS (`status='published' AND publish_at <= now()`), not cron — no background job needed.
 - Staff permissions live in `user_roles` (admin/editor/reporter); a DB trigger downgrades reporter publishes to review — server-side authorization, not UI-only.
 - Media bucket is private; uploads get long-lived signed URLs — workspace blocks public buckets.
-- Link import (`src/lib/import.functions.ts`) only reads public Open Graph data and never fabricates content; embeds are the fallback.
+- Facebook import resolves share links, then uses Graph oEmbed (optional META_ACCESS_TOKEN or META_APP_ID+META_APP_SECRET, server-only) plus public Open Graph; results are imported / embed_only / failed and never fabricated — direct page scraping is login-walled.
