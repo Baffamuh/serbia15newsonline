@@ -83,7 +83,7 @@ export const importFromLink = createServerFn({ method: "POST" })
     const video = meta(html, "og:video:secure_url") ?? meta(html, "og:video:url") ?? meta(html, "og:video");
     const ogType = meta(html, "og:type") ?? "";
 
-    const loginWall = source === "facebook" && (!title || /^(facebook|log in|log into facebook)/i.test(title.trim()));
+    const loginWall = source === "facebook" && (/\/login/.test(base.resolvedUrl) || !title || /^(facebook|log in|log into facebook)/i.test(title.trim()));
     if (loginWall) {
       base.message =
         "Facebook did not share this post's details publicly (it requires login or the post isn't public). You can still publish it as a Facebook embed, or type the story manually.";
