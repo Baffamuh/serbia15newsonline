@@ -90,18 +90,21 @@ function Editor() {
       const r = await runImport({ data: { url: u.data } });
       setResult(r);
       const isFb = r.source === "facebook";
+      const body = [r.description, r.author ? `— ${r.author}${r.postedOn ? `, ${r.postedOn}` : ""} (via Facebook)` : ""].filter(Boolean).join("\n\n");
       setF((p) => ({
         ...p,
-        title: p.title || r.title || "",
+        title: p.title || (r.title ?? "").slice(0, 250),
         summary: p.summary || (r.description ?? "").slice(0, 600),
-        body: p.body || r.description || "",
-        cover_image_url: p.cover_image_url || r.savedImageUrl || r.imageUrl || "",
-        facebook_url: isFb ? r.originalUrl : p.facebook_url,
-        video_url: !isFb && r.source === "youtube" ? r.originalUrl : p.video_url,
+        body: p.body || (r.status === "imported" ? body : ""),
+        cover_image_url: p.cover_image_url || r.savedImageUrl || "",
+        facebook_url: isFb && r.status !== "failed" ? r.normalizedUrl : p.facebook_url,
+        video_url: r.source === "youtube" && r.status !== "failed" ? r.originalUrl : p.video_url,
         source_url: r.source === "web" ? r.originalUrl : p.source_url,
         format: r.isVideo && p.format === "article" ? "video" : p.format,
       }));
-      r.ok ? toast.success("Details imported — please review") : toast.warning("Import not available for this link");
+      if (r.status === "imported") toast.success("Details imported — please review");
+      else if (r.status === "embed_only") toast.warning("No text imported — link attached as an embed");
+      else toast.error("Import failed");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Import failed");
     } finally {
