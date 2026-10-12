@@ -54,6 +54,8 @@ function Editor() {
   const runImport = useServerFn(importFromLink);
   const [f, setF] = useState<Form>(empty);
   const [slug, setSlug] = useState<string | null>(null);
+  const fetchCfg = useServerFn(getImportConfig);
+  const { data: metaCfg } = useQuery({ queryKey: ["import-config"], queryFn: () => fetchCfg(), staleTime: 300_000 });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
   const [link, setLink] = useState("");
@@ -186,21 +188,38 @@ function Editor() {
 
       <section className="mt-6 rounded-sm border-2 border-navy bg-card p-4 sm:p-5">
         <h2 className="flex items-center gap-2 font-display text-lg font-bold"><Facebook className="h-5 w-5 text-navy" /> Import from Facebook, YouTube or a web link</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Paste a public Facebook post, video, reel or page link. We read the details Facebook shares publicly. If none are shared, attach it as an embed instead.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Paste a public Facebook post, video, Reel, page or share link. We ask Facebook's official embed service for its public details. If none are shared, the post is attached as an embed and you write the text.</p>
+        {metaCfg && (
+          <p className="mt-1 text-xs text-muted-foreground">Meta token: {metaCfg.metaTokenConfigured ? "configured" : "not configured (public embed service only)"}</p>
+        )}
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://www.facebook.com/…" inputMode="url" />
           <Button onClick={doImport} disabled={importing} className="bg-navy text-navy-foreground">{importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Link2 className="h-4 w-4" />} Import details</Button>
           <Button variant="outline" onClick={useAsEmbed}>Use as embed</Button>
         </div>
         {result && (
-          <div className={`mt-3 flex gap-2 rounded-sm p-3 text-sm ${result.ok ? "bg-secondary" : "bg-accent text-accent-foreground"}`}>
-            {result.ok ? <CheckCircle2 className="h-5 w-5 shrink-0" /> : <AlertTriangle className="h-5 w-5 shrink-0" />}
-            <div>
+          <div
+            role="status"
+            className={`mt-3 flex gap-2 rounded-sm border p-3 text-sm ${
+              result.status === "imported" ? "border-navy bg-secondary" : result.status === "embed_only" ? "border-brand/40 bg-accent text-accent-foreground" : "border-destructive bg-destructive/10 text-destructive"
+            }`}
+          >
+            {result.status === "imported" ? <CheckCircle2 className="h-5 w-5 shrink-0" /> : <AlertTriangle className="h-5 w-5 shrink-0" />}
+            <div className="min-w-0">
+              <p className="font-bold">
+                {result.status === "imported" ? "Imported" : result.status === "embed_only" ? "Embed attached — no text imported" : "Import failed"}
+                {result.fbKind && <span className="ml-2 font-normal capitalize opacity-80">Facebook {result.fbKind}</span>}
+              </p>
               <p>{result.message}</p>
-              {!result.ok && result.source === "facebook" && (
-                <Button size="sm" variant="outline" className="mt-2" onClick={useAsEmbed}>Attach as Facebook embed</Button>
-              )}
+              {result.normalizedUrl !== result.originalUrl && <p className="mt-1 break-all text-xs opacity-80">Resolved link: {result.normalizedUrl}</p>}
+              <details className="mt-1 text-xs opacity-80"><summary className="cursor-pointer">What we tried</summary><ul className="ml-4 list-disc">{result.steps.map((s, i) => <li key={i}>{s}</li>)}</ul></details>
             </div>
+          </div>
+        )}
+        {f.facebook_url && (
+          <div className="mt-3">
+            <p className="mb-1 text-xs font-semibold text-muted-foreground">Facebook embed preview (shows only if the post is public):</p>
+            <EmbedPlayer url={f.facebook_url} title="Facebook preview" />
           </div>
         )}
       </section>
