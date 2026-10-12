@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Public news reads go through server functions in `src/lib/news.functions.ts` using a publishable-key client — keeps SSR/SEO working and RLS limits anon to published, due rows.
+- Scheduling is enforced by RLS (`status='published' AND publish_at <= now()`), not cron — no background job needed.
+- Staff permissions live in `user_roles` (admin/editor/reporter); a DB trigger downgrades reporter publishes to review — server-side authorization, not UI-only.
+- Media bucket is private; uploads get long-lived signed URLs — workspace blocks public buckets.
+- Link import (`src/lib/import.functions.ts`) only reads public Open Graph data and never fabricates content; embeds are the fallback.

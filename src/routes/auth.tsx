@@ -63,7 +63,7 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email: em.data,
           password: pw.data,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard`, data: { full_name: nm.data } },
+          options: { emailRedirectTo: `${window.location.origin}/auth`, data: { full_name: nm.data } },
         });
         if (error) throw error;
         if (!data.session) setNotice("Check your email and click the confirmation link to activate your account. An administrator will then approve your newsroom access.");
