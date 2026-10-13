@@ -31,7 +31,7 @@ function Header() {
           <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="Serbia 15 Online News home">
             <img src={logo.url} alt="" width={44} height={44} className="h-11 w-11 rounded-full bg-background" />
             <span className="leading-tight">
-              <span className="block font-display text-lg font-black tracking-tight">SERBIA 15</span>
+              <span className="block font-display text-lg font-black tracking-tight">SERBIA 15 ONLINE NEWS</span>
               <span className="block text-[11px] uppercase tracking-widest opacity-80">Tashar Al'ummah</span>
             </span>
           </Link>

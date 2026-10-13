@@ -32,7 +32,7 @@ export const Route = createFileRoute("/search")({
       { title: "Search & News Archive | Serbia 15 Online News" },
       { name: "description", content: "Search the Serbia 15 Online News archive of articles, videos, interviews and documentaries." },
       { property: "og:title", content: "News Archive — Serbia 15 Online News" },
-      { property: "og:description", content: "Search every story and video published by Serbia 15." },
+      { property: "og:description", content: "Search every story and video published by Serbia 15 Online News." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

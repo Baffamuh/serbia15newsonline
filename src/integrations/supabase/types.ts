@@ -174,6 +174,9 @@ export type Database = {
           facebook_page_url: string
           id: number
           instagram_url: string | null
+          is_live: boolean
+          live_description: string
+          live_started_at: string | null
           live_stream_url: string | null
           live_title: string
           tiktok_url: string | null
@@ -185,6 +188,9 @@ export type Database = {
           facebook_page_url?: string
           id?: number
           instagram_url?: string | null
+          is_live?: boolean
+          live_description?: string
+          live_started_at?: string | null
           live_stream_url?: string | null
           live_title?: string
           tiktok_url?: string | null
@@ -196,6 +202,9 @@ export type Database = {
           facebook_page_url?: string
           id?: number
           instagram_url?: string | null
+          is_live?: boolean
+          live_description?: string
+          live_started_at?: string | null
           live_stream_url?: string | null
           live_title?: string
           tiktok_url?: string | null
@@ -237,6 +246,15 @@ export type Database = {
       }
       is_editor: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      set_live_broadcast: {
+        Args: {
+          _active: boolean
+          _description: string
+          _title: string
+          _url: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "editor" | "reporter"

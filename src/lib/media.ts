@@ -2,17 +2,55 @@ import { supabase } from "@/integrations/supabase/client";
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm", "video/quicktime"];
+export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024 * 1024; // matches storage bucket limit
+const RESUMABLE_THRESHOLD = 6 * 1024 * 1024;
 
-/** Uploads a staff file to private storage and returns a long-lived signed URL. */
-export async function uploadMedia(file: File): Promise<string> {
-  if (!ALLOWED.includes(file.type)) throw new Error("Only JPG, PNG, WebP, GIF, MP4, WebM or MOV files are allowed.");
-  if (file.size > 50 * 1024 * 1024) throw new Error("File is larger than 50 MB.");
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error("Please sign in again.");
-  const safe = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-").slice(-60);
-  const path = `${u.user.id}/${Date.now()}-${safe}`;
-  const { error } = await supabase.storage.from("media").upload(path, file, { contentType: file.type });
-  if (error) throw new Error(error.message);
+export type UploadProgress = { loaded: number; total: number; retrying?: boolean };
+export type UploadOptions = { onProgress?: (p: UploadProgress) => void; signal?: AbortSignal };
+
+/** Uploads a staff file to private storage and returns a long-lived signed URL.
+ * Files over 6 MB use resumable chunked uploads (6 MB chunks, automatic retries,
+ * resume after page reload/network loss via stored fingerprints). */
+export async function uploadMedia(file: File | Blob, opts: UploadOptions = {}, name = "file"): Promise<string> {
+  const type = file.type;
+  const fname = file instanceof File ? file.name : name;
+  if (!ALLOWED.includes(type)) throw new Error("Only JPG, PNG, WebP, GIF, MP4, WebM or MOV files are allowed.");
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error("File is larger than 5 GB.");
+  const { data: s } = await supabase.auth.getSession();
+  const session = s.session;
+  if (!session) throw new Error("Please sign in again.");
+  const safe = fname.toLowerCase().replace(/[^a-z0-9.]+/g, "-").slice(-60);
+  const stamp = file instanceof File && file.size > RESUMABLE_THRESHOLD ? `${file.size}-${file.lastModified}` : `${Date.now()}`;
+  const path = `${session.user.id}/${stamp}-${safe}`; // stable for big files so resumes target the same object
+
+  if (file.size <= RESUMABLE_THRESHOLD) {
+    const { error } = await supabase.storage.from("media").upload(path, file, { contentType: type });
+    if (error) throw new Error(error.message);
+    opts.onProgress?.({ loaded: file.size, total: file.size });
+  } else {
+    const { Upload } = await import("tus-js-client");
+    await new Promise<void>((resolve, reject) => {
+      const up = new Upload(file, {
+        endpoint: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/upload/resumable`,
+        retryDelays: [0, 2000, 5000, 10000, 20000, 30000, 60000],
+        headers: { authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, "x-upsert": "true" },
+        uploadDataDuringCreation: true,
+        removeFingerprintOnSuccess: true,
+        chunkSize: 6 * 1024 * 1024, // required by storage
+        metadata: { bucketName: "media", objectName: path, contentType: type, cacheControl: "3600" },
+        onError: (e) => reject(new Error(`Upload failed: ${e.message.split("\n")[0]}`)),
+        onShouldRetry: () => { opts.onProgress?.({ loaded: 0, total: file.size, retrying: true }); return true; },
+        onProgress: (loaded, total) => opts.onProgress?.({ loaded, total }),
+        onSuccess: () => resolve(),
+      });
+      opts.signal?.addEventListener("abort", () => { up.abort(); reject(new Error("Upload cancelled")); });
+      // Resume a previous interrupted upload of the same file if one exists.
+      up.findPreviousUploads().then((prev) => {
+        if (prev[0]) up.resumeFromPreviousUpload(prev[0]);
+        up.start();
+      });
+    });
+  }
   const { data, error: e2 } = await supabase.storage.from("media").createSignedUrl(path, TEN_YEARS);
   if (e2 || !data) throw new Error(e2?.message ?? "Could not create file link.");
   return data.signedUrl;
