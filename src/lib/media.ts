@@ -20,7 +20,8 @@ export async function uploadMedia(file: File | Blob, opts: UploadOptions = {}, n
   const session = s.session;
   if (!session) throw new Error("Please sign in again.");
   const safe = fname.toLowerCase().replace(/[^a-z0-9.]+/g, "-").slice(-60);
-  const path = `${session.user.id}/${Date.now()}-${safe}`;
+  const stamp = file instanceof File && file.size > RESUMABLE_THRESHOLD ? `${file.size}-${file.lastModified}` : `${Date.now()}`;
+  const path = `${session.user.id}/${stamp}-${safe}`; // stable for big files so resumes target the same object
 
   if (file.size <= RESUMABLE_THRESHOLD) {
     const { error } = await supabase.storage.from("media").upload(path, file, { contentType: type });
@@ -32,7 +33,7 @@ export async function uploadMedia(file: File | Blob, opts: UploadOptions = {}, n
       const up = new Upload(file, {
         endpoint: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/upload/resumable`,
         retryDelays: [0, 2000, 5000, 10000, 20000, 30000, 60000],
-        headers: { authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, "x-upsert": "false" },
+        headers: { authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, "x-upsert": "true" },
         uploadDataDuringCreation: true,
         removeFingerprintOnSuccess: true,
         chunkSize: 6 * 1024 * 1024, // required by storage
