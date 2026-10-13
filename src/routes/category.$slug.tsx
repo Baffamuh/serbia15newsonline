@@ -29,7 +29,7 @@ export const Route = createFileRoute("/category/$slug")({
       meta: [
         { title: `${name} News | Serbia 15 Online News` },
         { name: "description", content: `Latest ${name} news, analysis and videos from Serbia 15 Online News — Tashar Al'ummah.` },
-        { property: "og:title", content: `${name} News — Serbia 15` },
+        { property: "og:title", content: `${name} News — Serbia 15 Online News` },
         { property: "og:description", content: `Latest ${name} stories from Serbia 15 Online News.` },
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary" },

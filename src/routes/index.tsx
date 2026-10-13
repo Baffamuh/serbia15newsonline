@@ -99,7 +99,7 @@ function Home() {
                 )}
                 <Link to="/live" className="mt-8 block rounded-sm bg-navy p-5 text-navy-foreground">
                   <span className="text-xs font-black uppercase tracking-widest text-brand">● Live TV</span>
-                  <p className="mt-1 font-display text-xl font-bold">Watch Serbia 15 Live</p>
+                  <p className="mt-1 font-display text-xl font-bold">Watch Serbia 15 Online News Live</p>
                   <p className="mt-1 text-sm opacity-80">See our live broadcast when we are on air.</p>
                 </Link>
               </aside>

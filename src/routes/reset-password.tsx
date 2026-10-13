@@ -9,10 +9,10 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Set a new password | Serbia 15" },
-      { name: "description", content: "Choose a new password for your Serbia 15 newsroom account." },
-      { property: "og:title", content: "Reset password — Serbia 15" },
-      { property: "og:description", content: "Reset your Serbia 15 newsroom password." },
+      { title: "Set a new password | Serbia 15 Online News" },
+      { name: "description", content: "Choose a new password for your Serbia 15 Online News newsroom account." },
+      { property: "og:title", content: "Reset password — Serbia 15 Online News" },
+      { property: "og:description", content: "Reset your Serbia 15 Online News newsroom password." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

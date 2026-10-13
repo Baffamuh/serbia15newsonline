@@ -8,9 +8,9 @@ import logo from "@/assets/logo.jpg.asset.json";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Newsroom Dashboard | Serbia 15" },
-      { name: "description", content: "Serbia 15 newsroom content management." },
-      { property: "og:title", content: "Serbia 15 Newsroom" },
+      { title: "Newsroom Dashboard | Serbia 15 Online News" },
+      { name: "description", content: "Serbia 15 Online News newsroom content management." },
+      { property: "og:title", content: "Serbia 15 Online News Newsroom" },
       { property: "og:description", content: "Staff dashboard." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -50,7 +50,7 @@ function DashboardLayout() {
         <div className="flex items-center gap-2 p-4">
           <img src={logo.url} alt="" className="h-10 w-10 rounded-full bg-background" />
           <div className="leading-tight">
-            <p className="font-display font-black">SERBIA 15</p>
+            <p className="font-display font-black">SERBIA 15 ONLINE NEWS</p>
             <p className="text-xs opacity-70">Newsroom</p>
           </div>
         </div>

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/news/$slug")({
     return { title: d.article.title, summary: d.article.summary, image: thumbOf(d.article) };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Story unavailable | Serbia 15" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData) return { meta: [{ title: "Story unavailable | Serbia 15 Online News" }, { name: "robots", content: "noindex" }] };
     const img = loaderData.image && /^https:\/\//.test(loaderData.image) ? loaderData.image : null;
     return {
       meta: [

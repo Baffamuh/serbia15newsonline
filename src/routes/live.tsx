@@ -10,7 +10,7 @@ export const Route = createFileRoute("/live")({
     meta: [
       { title: "Live TV | Serbia 15 Online News" },
       { name: "description", content: "Watch Serbia 15 Online News — Tashar Al'ummah live broadcasts." },
-      { property: "og:title", content: "Serbia 15 Live TV" },
+      { property: "og:title", content: "Serbia 15 Online News Live TV" },
       { property: "og:description", content: "Live broadcasts from Serbia 15 Online News." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -38,7 +38,7 @@ function LivePage() {
           <div className="mt-6 rounded-sm bg-navy-deep p-10 text-center text-navy-foreground">
             <Radio className="mx-auto h-12 w-12 opacity-60" />
             <p className="mt-4 font-display text-2xl font-bold">We are not broadcasting right now</p>
-            <p className="mx-auto mt-2 max-w-md opacity-80">No live stream is currently available. When Serbia 15 goes live, the broadcast will appear here.</p>
+            <p className="mx-auto mt-2 max-w-md opacity-80">No live stream is currently available. When Serbia 15 Online News goes live, the broadcast will appear here.</p>
             {s?.facebook_page_url && (
               <a href={s.facebook_page_url} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-sm bg-brand px-4 py-2 font-semibold text-brand-foreground">
                 <Facebook className="h-4 w-4" /> Follow us on Facebook

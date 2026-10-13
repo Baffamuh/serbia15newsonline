@@ -27,7 +27,7 @@ export const Route = createFileRoute("/videos")({
     meta: [
       { title: "Videos, Interviews & Documentaries | Serbia 15 Online News" },
       { name: "description", content: "Watch news videos, interviews and documentaries from Serbia 15 Online News — Tashar Al'ummah." },
-      { property: "og:title", content: "Serbia 15 Videos" },
+      { property: "og:title", content: "Serbia 15 Online News Videos" },
       { property: "og:description", content: "News videos, interviews and documentaries." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

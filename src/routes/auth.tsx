@@ -14,9 +14,9 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Staff Login | Serbia 15 Online News" },
-      { name: "description", content: "Sign in or register for the Serbia 15 newsroom." },
-      { property: "og:title", content: "Serbia 15 Staff Login" },
-      { property: "og:description", content: "Newsroom access for Serbia 15 staff." },
+      { name: "description", content: "Sign in or register for the Serbia 15 Online News newsroom." },
+      { property: "og:title", content: "Serbia 15 Online News Staff Login" },
+      { property: "og:description", content: "Newsroom access for Serbia 15 Online News staff." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -88,7 +88,7 @@ function AuthPage() {
       <div className="w-full max-w-md rounded-sm bg-card p-8 shadow-xl">
         <Link to="/" className="flex flex-col items-center gap-2">
           <img src={logo.url} alt="Serbia 15 Online News" className="h-20 w-20 rounded-full" />
-          <span className="font-display text-xl font-black text-navy">Serbia 15 Newsroom</span>
+          <span className="font-display text-xl font-black text-navy">Serbia 15 Online News Newsroom</span>
         </Link>
         <h1 className="mt-6 text-center font-display text-2xl font-bold">
           {mode === "in" ? "Staff sign in" : mode === "up" ? "Register as staff" : "Reset password"}
