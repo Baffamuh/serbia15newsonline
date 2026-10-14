@@ -70,7 +70,7 @@ export async function aiImage(prompt: string, imageDataUrl?: string): Promise<st
     fd.append("model", "openai/gpt-image-2.5-sunburst");
     fd.append("prompt", prompt);
     fd.append("size", "1536x1024");
-    fd.append("image", new Blob([bin], { type: m[1] }), "source.png");
+    fd.append("image", new Blob([bin], { type: m[1] ?? "image/png" }), "source.png");
     res = await fetch(`${GATEWAY}/images/edits`, { method: "POST", headers, body: fd });
   } else {
     res = await fetch(`${GATEWAY}/images/generations`, {
