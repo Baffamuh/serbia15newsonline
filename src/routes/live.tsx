@@ -21,18 +21,19 @@ export const Route = createFileRoute("/live")({
 
 function LivePage() {
   const { data: s } = useSuspenseQuery(settingsQuery);
-  const url = s?.live_stream_url;
+  const url = s?.is_live ? s.live_stream_url : null;
   return (
     <SiteLayout>
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="flex items-center gap-3 font-display text-4xl font-black text-navy">
+      <div className="mx-auto max-w-5xl px-3 py-6 sm:px-4 sm:py-8">
+        <h1 className="flex items-center gap-3 font-display text-3xl font-black text-navy sm:text-4xl">
           <Radio className="h-8 w-8 text-brand" /> Live TV
         </h1>
         {url ? (
           <section className="mt-6">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-sm bg-brand px-2 py-1 text-xs font-black uppercase text-brand-foreground">● Live</p>
+            <p className="mb-3 inline-flex items-center gap-2 rounded-sm bg-brand px-2 py-1 text-xs font-black uppercase text-brand-foreground"><span className="h-2 w-2 animate-pulse rounded-full bg-brand-foreground" /> Live</p>
             <h2 className="mb-4 font-display text-2xl font-bold">{s?.live_title}</h2>
             <EmbedPlayer url={url} title={s?.live_title ?? "Live stream"} />
+            {s?.live_description && <p className="mt-4 whitespace-pre-line text-muted-foreground">{s.live_description}</p>}
           </section>
         ) : (
           <div className="mt-6 rounded-sm bg-navy-deep p-10 text-center text-navy-foreground">
