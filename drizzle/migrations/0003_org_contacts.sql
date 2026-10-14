@@ -1,0 +1,5 @@
+ALTER TABLE public.site_settings
+  ADD COLUMN IF NOT EXISTS org_phone text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS org_whatsapp text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS org_email text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS org_address text NOT NULL DEFAULT '';

@@ -179,6 +179,10 @@ export type Database = {
           live_started_at: string | null
           live_stream_url: string | null
           live_title: string
+          org_address: string
+          org_email: string
+          org_phone: string
+          org_whatsapp: string
           tiktok_url: string | null
           updated_at: string
           x_url: string | null
@@ -193,6 +197,10 @@ export type Database = {
           live_started_at?: string | null
           live_stream_url?: string | null
           live_title?: string
+          org_address?: string
+          org_email?: string
+          org_phone?: string
+          org_whatsapp?: string
           tiktok_url?: string | null
           updated_at?: string
           x_url?: string | null
@@ -207,6 +215,10 @@ export type Database = {
           live_started_at?: string | null
           live_stream_url?: string | null
           live_title?: string
+          org_address?: string
+          org_email?: string
+          org_phone?: string
+          org_whatsapp?: string
           tiktok_url?: string | null
           updated_at?: string
           x_url?: string | null
