@@ -31,9 +31,9 @@ export async function uploadMedia(file: File | Blob, opts: UploadOptions = {}, n
     const { Upload } = await import("tus-js-client");
     await new Promise<void>((resolve, reject) => {
       const up = new Upload(file, {
-        endpoint: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/upload/resumable`,
+        endpoint: `${import.meta.env['VITE_SUPABASE_URL']}/storage/v1/upload/resumable`,
         retryDelays: [0, 2000, 5000, 10000, 20000, 30000, 60000],
-        headers: { authorization: `Bearer ${session.access_token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, "x-upsert": "true" },
+        headers: { authorization: `Bearer ${session.access_token}`, apikey: import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'], "x-upsert": "true" },
         uploadDataDuringCreation: true,
         removeFingerprintOnSuccess: true,
         chunkSize: 6 * 1024 * 1024, // required by storage
