@@ -57,6 +57,7 @@ export type Database = {
           created_at: string
           facebook_url: string | null
           format: Database["public"]["Enums"]["content_format"]
+          gallery_images: string[]
           id: string
           is_breaking: boolean
           is_featured: boolean
@@ -79,6 +80,7 @@ export type Database = {
           created_at?: string
           facebook_url?: string | null
           format?: Database["public"]["Enums"]["content_format"]
+          gallery_images?: string[]
           id?: string
           is_breaking?: boolean
           is_featured?: boolean
@@ -101,6 +103,7 @@ export type Database = {
           created_at?: string
           facebook_url?: string | null
           format?: Database["public"]["Enums"]["content_format"]
+          gallery_images?: string[]
           id?: string
           is_breaking?: boolean
           is_featured?: boolean
