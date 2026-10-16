@@ -50,7 +50,7 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
     let off = false;
     (async () => {
       const c = canvas.current; if (!c) return; const ctx = c.getContext("2d")!;
-      const poly = (pts: number[][], col: string) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
+      const poly = (pts: [number, number][], col: string) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
       ctx.fillStyle = "#F0F4FA"; ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = "rgba(8,32,78,0.07)";
       for (let x = 20; x < W; x += 26) for (let y = 20; y < H; y += 26) { ctx.beginPath(); ctx.arc(x, y, 2.5, 0, 7); ctx.fill(); }
@@ -101,7 +101,7 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
       poly([[0, 1200], [W, 1200], [W, H], [0, H]], NAVY);
       poly([[720, 1200], [W, 1200], [W, H], [660, H]], RED);
       ctx.font = "900 26px Arial, sans-serif"; ctx.textAlign = "center";
-      [["f", 70], ["X", 140], ["▶", 210]].forEach(([t, x]) => { ctx.beginPath(); ctx.arc(+x, 1275, 28, 0, 7); ctx.fillStyle = WHITE; ctx.fill(); ctx.fillStyle = NAVY; ctx.fillText(String(t), +x, 1285); });
+      ([["f", 70], ["X", 140], ["▶", 210]] as [string, number][]).forEach(([t, x]) => { ctx.beginPath(); ctx.arc(+x, 1275, 28, 0, 7); ctx.fillStyle = WHITE; ctx.fill(); ctx.fillStyle = NAVY; ctx.fillText(String(t), +x, 1285); });
       ctx.textAlign = "left"; ctx.fillStyle = WHITE; ctx.font = "800 30px Archivo, Arial, sans-serif"; ctx.fillText("|  @Serbia15OnlineNews", 260, 1285);
       ctx.textAlign = "center"; ctx.font = "900 36px Archivo, Arial, sans-serif"; ctx.fillText("TASHAR AL'UMMAH", 880, 1288); ctx.textAlign = "left";
       try {
