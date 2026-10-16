@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardLayout() {
-  const { session, roles, loading, isStaff, isAdmin, refreshRoles } = useAuth();
+  const { session, roles, loading, isStaff, isAdmin, isEditor, refreshRoles } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
 
@@ -41,7 +41,7 @@ function DashboardLayout() {
           { to: "/dashboard/settings", label: "Site settings", Icon: Settings },
           { to: "/dashboard/activity", label: "Activity log", Icon: History },
         ]
-      : []),
+      : isEditor ? [{ to: "/dashboard/settings", label: "Live broadcast", Icon: Settings }] : []),
   ] as const;
 
   return (

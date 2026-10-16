@@ -10,6 +10,10 @@ import { getImportConfig, importFromLink, type ImportResult } from "@/lib/import
 import { logActivity, useAuth } from "@/lib/auth";
 import { getEmbed, slugify, uploadMedia } from "@/lib/media";
 import { EmbedPlayer } from "@/components/site/EmbedPlayer";
+import { AiPanel } from "@/components/dashboard/AiPanel";
+import { ThumbnailDesigner } from "@/components/dashboard/ThumbnailDesigner";
+import { Progress } from "@/components/ui/progress";
+import type { UploadProgress } from "@/lib/media";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +32,7 @@ const empty = {
   title: "", summary: "", body: "", category_id: "", format: "article" as Format, status: "draft" as Status,
   publish_at: "", cover_image_url: "", video_url: "", facebook_url: "", source_url: "",
   is_breaking: false, is_featured: false, is_trending: false,
+  gallery_images: [] as string[],
 };
 type Form = typeof empty;
 
@@ -59,6 +64,8 @@ function Editor() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
   const [link, setLink] = useState("");
+  const [prog, setProg] = useState<UploadProgress | null>(null);
+  const [designer, setDesigner] = useState(false);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
 
@@ -77,6 +84,7 @@ function Editor() {
         format: data.format, status: data.status, publish_at: toLocalInput(data.publish_at),
         cover_image_url: data.cover_image_url ?? "", video_url: data.video_url ?? "", facebook_url: data.facebook_url ?? "",
         source_url: data.source_url ?? "", is_breaking: data.is_breaking, is_featured: data.is_featured, is_trending: data.is_trending,
+        gallery_images: data.gallery_images ?? [],
       });
     });
   }, [id]);
@@ -132,18 +140,36 @@ function Editor() {
     toast.success("Link attached as an embed. Add a headline and save.");
   }
 
+  async function onGallery(files: FileList | null) {
+    if (!files?.length) return;
+    const room = 12 - f.gallery_images.length;
+    if (room <= 0) return toast.error("A story can have up to 12 extra photos.");
+    setUploading("gallery");
+    try {
+      for (const file of Array.from(files).slice(0, room)) {
+        setProg({ loaded: 0, total: file.size });
+        const url = await uploadMedia(file, { onProgress: setProg });
+        setF((p) => ({ ...p, gallery_images: [...p.gallery_images, url].slice(0, 12) }));
+      }
+      toast.success("Photos added");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally { setUploading(null); setProg(null); }
+  }
+
   async function onUpload(kind: "cover_image_url" | "video_url", file?: File) {
     if (!file) return;
     setUploading(kind);
+    setProg({ loaded: 0, total: file.size });
     try {
-      const url = await uploadMedia(file);
+      const url = await uploadMedia(file, { onProgress: setProg });
       set(kind, url);
       await logActivity("upload", "media", null, file.name);
       toast.success("Uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
     } finally {
-      setUploading(null);
+      setUploading(null); setProg(null);
     }
   }
 
@@ -167,6 +193,7 @@ function Editor() {
       video_url: f.video_url || null,
       facebook_url: f.facebook_url || null,
       source_url: f.source_url || null,
+      gallery_images: f.gallery_images,
       is_breaking: f.is_breaking, is_featured: f.is_featured, is_trending: f.is_trending,
     };
     let err, savedId = id;
@@ -258,6 +285,13 @@ function Editor() {
             </div>
           </div>
 
+          {prog && uploading && (
+            <div className="rounded-sm border bg-muted p-3 text-sm" role="status">
+              <div className="mb-1 flex justify-between gap-2"><span>{prog.retrying ? "Connection lost — retrying…" : "Uploading…"}</span>
+                <span>{Math.round((prog.loaded / Math.max(prog.total, 1)) * 100)}% · {(prog.loaded / 1048576).toFixed(1)} / {(prog.total / 1048576).toFixed(1)} MB</span></div>
+              <Progress value={(prog.loaded / Math.max(prog.total, 1)) * 100} />
+            </div>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label>Cover image</Label>
@@ -267,17 +301,44 @@ function Editor() {
                 <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={(e) => onUpload("cover_image_url", e.target.files?.[0])} />
               </label>
               {f.cover_image_url && <button className="mt-1 text-xs text-destructive underline" onClick={() => set("cover_image_url", "")}>Remove image</button>}
+              <Button type="button" variant="outline" size="sm" className="mt-2 w-full" onClick={() => setDesigner((d) => !d)}>{designer ? "Close thumbnail designer" : "Design branded thumbnail"}</Button>
             </div>
             <div className="space-y-3">
               <div><Label htmlFor="v">Video link (YouTube, Facebook video or uploaded file)</Label><Input id="v" value={f.video_url} onChange={(e) => set("video_url", e.target.value)} placeholder="https://…" /></div>
               <label className="flex cursor-pointer items-center justify-center gap-2 rounded-sm border border-dashed p-3 text-sm hover:bg-muted">
-                {uploading === "video_url" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Upload video (max 50 MB)
+                {uploading === "video_url" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Upload video (up to 5 GB, resumable)
                 <input type="file" accept="video/mp4,video/webm,video/quicktime" className="sr-only" onChange={(e) => onUpload("video_url", e.target.files?.[0])} />
               </label>
               <div><Label htmlFor="fb">Facebook post link (embedded & “View original”)</Label><Input id="fb" value={f.facebook_url} onChange={(e) => set("facebook_url", e.target.value)} placeholder="https://www.facebook.com/…" /></div>
               <div><Label htmlFor="src">Other source link</Label><Input id="src" value={f.source_url} onChange={(e) => set("source_url", e.target.value)} placeholder="https://…" /></div>
             </div>
           </div>
+
+          {designer && (
+            <ThumbnailDesigner headline={f.title} category={cats?.find((c) => c.id === f.category_id)?.name ?? ""} image={f.cover_image_url}
+              onSaved={(url) => { set("cover_image_url", url); }} />
+          )}
+
+          <div>
+            <Label>More photos ({f.gallery_images.length}/12)</Label>
+            {f.gallery_images.length > 0 && (
+              <div className="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {f.gallery_images.map((g, i) => (
+                  <div key={g} className="relative">
+                    <img src={g} alt={`Photo ${i + 1}`} className="aspect-video w-full rounded-sm object-cover" />
+                    <button type="button" aria-label={`Remove photo ${i + 1}`} className="absolute right-1 top-1 rounded-sm bg-destructive px-1.5 text-xs text-destructive-foreground"
+                      onClick={() => setF((p) => ({ ...p, gallery_images: p.gallery_images.filter((x) => x !== g) }))}>✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-sm border border-dashed p-3 text-sm hover:bg-muted">
+              {uploading === "gallery" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} Add photos (select several)
+              <input type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" className="sr-only" onChange={(e) => { onGallery(e.target.files); e.target.value = ""; }} />
+            </label>
+          </div>
+
+          <AiPanel title={f.title} summary={f.summary} body={f.body} onApply={(field, value) => set(field, value)} />
 
           {isEditor ? (
             <div className="flex flex-wrap gap-6 rounded-sm bg-muted p-3">
@@ -295,6 +356,7 @@ function Editor() {
           <div className="mt-4">
             {embed.kind !== "none" ? <EmbedPlayer url={f.video_url || f.facebook_url} title={f.title} poster={f.cover_image_url} /> : f.cover_image_url && <img src={f.cover_image_url} alt="" className="w-full rounded-sm" />}
           </div>
+          {f.gallery_images.length > 0 && <div className="mt-4 grid gap-2 sm:grid-cols-2">{f.gallery_images.map((g) => <img key={g} src={g} alt="" className="aspect-video w-full rounded-sm object-cover" />)}</div>}
           <div className="prose-news mt-6">{f.body.split(/\n{2,}/).map((p, i) => <p key={i} className="whitespace-pre-line">{p}</p>)}</div>
         </TabsContent>
       </Tabs>
