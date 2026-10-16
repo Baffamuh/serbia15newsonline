@@ -126,6 +126,7 @@ function SettingsPage() {
 
   return (
     <div className="max-w-3xl space-y-8">
+      <BroadcastControls />
       <section className="space-y-4 rounded-sm border bg-card p-5">
         <h1 className="font-display text-3xl font-black text-navy">Site settings</h1>
         {FIELDS.map(([k, label, hint]) => (
