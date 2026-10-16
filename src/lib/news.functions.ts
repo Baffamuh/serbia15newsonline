@@ -80,11 +80,11 @@ export const getArticle = createServerFn({ method: "GET" })
     const sb = publicClient();
     const { data: a } = await sb
       .from("articles")
-      .select(`${CARD_FIELDS},body,source_url,updated_at,category_id`)
+      .select(`${CARD_FIELDS},body,source_url,updated_at,category_id,gallery_images`)
       .eq("slug", data.slug)
       .maybeSingle();
     if (!a) return null;
-    const row = a as unknown as NewsCard & { body: string; source_url: string | null; updated_at: string; category_id: string | null };
+    const row = a as unknown as NewsCard & { body: string; source_url: string | null; updated_at: string; category_id: string | null; gallery_images: string[] };
     let related: NewsCard[] = [];
     if (row.category_id) {
       const { data: r } = await sb
