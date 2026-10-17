@@ -101,7 +101,7 @@ export const getCategories = createServerFn({ method: "GET" }).handler(async () 
 });
 
 export const getSettings = createServerFn({ method: "GET" }).handler(async () => {
-  const { data } = await publicClient().from("site_settings").select("*").eq("id", 1).maybeSingle();
+  const { data } = await publicClient().rpc("get_public_settings").maybeSingle();
   return data;
 });
 
