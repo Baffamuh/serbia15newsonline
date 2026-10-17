@@ -252,6 +252,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_settings: {
+        Args: never
+        Returns: {
+          facebook_page_url: string
+          id: number
+          instagram_url: string | null
+          is_live: boolean
+          live_description: string
+          live_started_at: string | null
+          live_stream_url: string | null
+          live_title: string
+          org_address: string
+          org_email: string
+          org_phone: string
+          org_whatsapp: string
+          tiktok_url: string | null
+          updated_at: string
+          x_url: string | null
+          youtube_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "site_settings"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
