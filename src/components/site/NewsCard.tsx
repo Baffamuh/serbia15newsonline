@@ -18,7 +18,7 @@ export function Thumb({ a, className, eager }: { a: Card; className?: string; ea
   const [failed, setFailed] = useState(false);
   const src = failed ? null : thumbOf(a);
   return (
-    <div className={cn("relative aspect-video overflow-hidden bg-muted", className)}>
+    <div className={cn("relative aspect-[4/3] overflow-hidden bg-muted", className)}>
       {src ? (
         <img src={src} alt="" loading={eager ? "eager" : "lazy"} onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
       ) : (

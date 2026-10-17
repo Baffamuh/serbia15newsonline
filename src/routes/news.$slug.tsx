@@ -69,7 +69,7 @@ function ArticlePage() {
         {(a.gallery_images ?? []).length > 0 && (
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {a.gallery_images.map((g: string, i: number) => (
-              <img key={g} src={g} alt={`${a.title} — photo ${i + 1}`} loading="lazy" className="aspect-video w-full rounded-sm object-cover" />
+              <img key={g} src={g} alt={`${a.title} — photo ${i + 1}`} loading="lazy" className="aspect-[4/3] w-full rounded-sm object-cover" />
             ))}
           </div>
         )}
