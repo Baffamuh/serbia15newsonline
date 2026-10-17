@@ -150,7 +150,7 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
   return (
     <section className="mt-6 rounded-sm border bg-card p-4 sm:p-5">
       <h2 className="flex items-center gap-2 font-display text-lg font-bold"><ImagePlus className="h-5 w-5 text-brand" /> Thumbnail designer</h2>
-      <canvas ref={canvas} width={W} height={H} className="mt-3 mx-auto aspect-[4/5] w-full max-w-md rounded-sm border" aria-label="Thumbnail preview" />
+      <canvas ref={canvas} width={W} height={H} className="mt-3 mx-auto aspect-video w-full rounded-sm border" aria-label="Thumbnail preview" />
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div><Label htmlFor="th">Headline on image</Label><Input id="th" value={text} maxLength={120} onChange={(e) => setText(e.target.value)} /></div>
         <div><Label htmlFor="tl">Category label</Label><Input id="tl" value={label} maxLength={24} onChange={(e) => setLabel(e.target.value)} /></div>

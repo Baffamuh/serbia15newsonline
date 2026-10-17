@@ -61,12 +61,11 @@ function Header() {
           >
             <Radio className="h-4 w-4" /> Live
           </Link>
-          <Link
-            to={session ? "/dashboard" : "/auth"}
-            className="hidden text-sm font-medium opacity-90 hover:opacity-100 sm:inline"
-          >
-            {session ? (isStaff ? "Newsroom" : "My account") : "Staff login"}
-          </Link>
+          {session && (
+            <Link to="/dashboard" className="hidden text-sm font-medium opacity-90 hover:opacity-100 sm:inline">
+              {isStaff ? "Newsroom" : "My account"}
+            </Link>
+          )}
           <button className="shrink-0 md:hidden" aria-label="Menu" onClick={() => setOpen((o) => !o)}>
             {open ? <X /> : <Menu />}
           </button>
@@ -99,9 +98,11 @@ function Header() {
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search news & videos" aria-label="Search news" className="w-full min-w-0 rounded-l-sm border px-3 py-2 text-base" />
             <button className="rounded-r-sm bg-brand px-3 text-brand-foreground" aria-label="Search"><Search className="h-4 w-4" /></button>
           </form>
-          <Link to={session ? "/dashboard" : "/auth"} onClick={() => setOpen(false)} className="mt-3 block text-sm font-semibold text-primary">
-            {session ? "Go to newsroom" : "Staff login"}
-          </Link>
+          {session && (
+            <Link to="/dashboard" onClick={() => setOpen(false)} className="mt-3 block text-sm font-semibold text-primary">
+              Go to newsroom
+            </Link>
+          )}
         </div>
       )}
     </header>
@@ -145,7 +146,6 @@ function Footer() {
             <li><Link to="/videos" className="opacity-85 hover:underline">Videos</Link></li>
             <li><Link to="/live" className="opacity-85 hover:underline">Live TV</Link></li>
             <li><Link to="/search" className="opacity-85 hover:underline">News archive</Link></li>
-            <li><Link to="/auth" className="opacity-85 hover:underline">Staff login</Link></li>
           </ul>
         </div>
         <div>
