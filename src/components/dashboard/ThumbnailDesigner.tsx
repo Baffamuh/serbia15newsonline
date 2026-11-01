@@ -37,9 +37,8 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
   const [size, setSize] = useState(64);
   const [person, setPerson] = useState("");
   const [date, setDate] = useState(() => { const d = new Date(); return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`; });
-  const [prompt, setPrompt] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
-  const gen = useServerFn(generateThumbnailArt);
+
 
   useEffect(() => setText(headline), [headline]);
   useEffect(() => setLabel(category || "NEWS"), [category]);
