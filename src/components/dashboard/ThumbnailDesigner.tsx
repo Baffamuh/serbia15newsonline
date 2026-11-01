@@ -115,26 +115,8 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
     const r = new FileReader(); r.onload = () => setSrc(String(r.result)); r.readAsDataURL(file);
   }
 
-  async function toDataUrl(u: string) {
-    if (u.startsWith("data:")) return u;
-    const img = await loadImg(u); const c = document.createElement("canvas");
-    const s = Math.min(1, 1536 / Math.max(img.width, img.height));
-    c.width = img.width * s; c.height = img.height * s; c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
-    return c.toDataURL("image/png");
-  }
-
-  async function ai(mode: "enhance" | "create") {
-    if (prompt.trim().length < 3) return toast.error("Describe what you want (at least a few words).");
-    if (mode === "enhance" && !src) return toast.error("Add a photo first.");
-    setBusy(mode);
-    try {
-      const r = await gen({ data: { prompt, image: mode === "enhance" ? await toDataUrl(src) : undefined } });
-      if (r.ok) { setSrc(r.image); toast.success("AI image ready — review it in the preview."); } else toast.error(r.error);
-    } catch (e) { toast.error(e instanceof Error ? e.message : "Image generation failed"); }
-    finally { setBusy(null); }
-  }
-
   async function save() {
+
     setBusy("save");
     try {
       const blob = await new Promise<Blob>((res, rej) => canvas.current!.toBlob((b) => (b ? res(b) : rej(new Error("Could not export (image source blocks export)"))), "image/png"));
@@ -163,16 +145,8 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
         <ImagePlus className="h-4 w-4" /> Use a different photo
         <input type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
       </label>
-      <div className="mt-3 rounded-sm bg-muted p-3">
-        <Label htmlFor="tp">AI image help</Label>
-        <Input id="tp" value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g. brighten, sharpen and improve contrast" />
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Button size="sm" variant="outline" disabled={!!busy} onClick={() => ai("enhance")}>{busy === "enhance" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />} Enhance this photo</Button>
-          <Button size="sm" variant="outline" disabled={!!busy} onClick={() => ai("create")}>{busy === "create" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />} Create background</Button>
-        </div>
-        <p className="mt-1 text-xs text-muted-foreground">AI backgrounds are illustrations — never use them to depict real events as photos.</p>
-      </div>
       <Button variant="outline" className="mt-3 mr-2" onClick={download}><Download className="h-4 w-4" /> Download PNG (1280×720)</Button>
+
       <Button className="mt-3 bg-brand text-brand-foreground hover:bg-brand/90" disabled={!!busy} onClick={save}>{busy === "save" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save & use as cover</Button>
     </section>
   );
