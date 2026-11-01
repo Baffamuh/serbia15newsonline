@@ -10,7 +10,6 @@ import { getImportConfig, importFromLink, type ImportResult } from "@/lib/import
 import { logActivity, useAuth } from "@/lib/auth";
 import { getEmbed, slugify, uploadMedia } from "@/lib/media";
 import { EmbedPlayer } from "@/components/site/EmbedPlayer";
-import { AiPanel } from "@/components/dashboard/AiPanel";
 import { ThumbnailDesigner } from "@/components/dashboard/ThumbnailDesigner";
 import { Progress } from "@/components/ui/progress";
 import type { UploadProgress } from "@/lib/media";
@@ -338,7 +337,6 @@ function Editor() {
             </label>
           </div>
 
-          <AiPanel title={f.title} summary={f.summary} body={f.body} onApply={(field, value) => set(field, value)} />
 
           {isEditor ? (
             <div className="flex flex-wrap gap-6 rounded-sm bg-muted p-3">
