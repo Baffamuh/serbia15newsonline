@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Sparkles, ImagePlus, Save, Download } from "lucide-react";
+import { Loader2, ImagePlus, Save, Download } from "lucide-react";
 import { toast } from "sonner";
-import { generateThumbnailArt } from "@/lib/ai.functions";
 import { uploadMedia } from "@/lib/media";
+
 import { logActivity } from "@/lib/auth";
 import logo from "@/assets/logo.jpg.asset.json";
 import { Button } from "@/components/ui/button";
