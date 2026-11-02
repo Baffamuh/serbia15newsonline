@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Mail, MessageCircle, Phone, Radio, Search, Facebook, Youtube, Instagram, Menu, X } from "lucide-react";
 import logo from "@/assets/logo.jpg.asset.json";
 import { getSettings } from "@/lib/news.functions";
+import { ratioCss } from "@/lib/image-ratio";
 import { useAuth } from "@/lib/auth";
 
 export const NAV = [
@@ -181,6 +182,9 @@ function Footer() {
 
 export function SiteLayout({ children, ticker }: { children: ReactNode; ticker?: ReactNode }) {
   const { data: s } = useQuery(settingsQuery);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--card-ratio", ratioCss(s?.card_image_ratio));
+  }, [s?.card_image_ratio]);
   return (
     <div className="flex min-h-screen max-w-full flex-col overflow-x-clip">
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-background focus:p-2">Skip to content</a>
