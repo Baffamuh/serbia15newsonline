@@ -15,3 +15,4 @@
 - Staff permissions live in `user_roles` (admin/editor/reporter); a DB trigger downgrades reporter publishes to review — server-side authorization, not UI-only.
 - Media bucket is private; uploads get long-lived signed URLs — workspace blocks public buckets.
 - Facebook import resolves share links, then uses Graph oEmbed (optional META_ACCESS_TOKEN or META_APP_ID+META_APP_SECRET, server-only) plus public Open Graph; results are imported / embed_only / failed and never fabricated — direct page scraping is login-walled.
+- Server Supabase clients fall back to build-time VITE_* public values so external hosts (Vercel) work without configured env vars.
