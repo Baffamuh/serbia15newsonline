@@ -37,6 +37,14 @@ function AuthPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+  // Managed Google sign-in runs through Lovable's OAuth gateway, which only
+  // exists on Lovable-hosted domains. On other hosts (Vercel, custom domains)
+  // the button would 404, so hide it there; email/password works everywhere.
+  const googleAvailable = (() => {
+    if (typeof window === "undefined") return false;
+    const h = window.location.hostname;
+    return h === "localhost" || h.endsWith(".lovable.app") || h.endsWith(".lovable.cloud");
+  })();
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/dashboard", replace: true });
