@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { PlayCircle, Newspaper } from "lucide-react";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 import type { NewsCard as Card } from "@/lib/news.functions";
 import { formatDate, youtubeId } from "@/lib/media";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ export function Thumb({ a, className, eager }: { a: Card; className?: string; ea
         <img src={src} alt="" loading={eager ? "eager" : "lazy"} onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-navy to-navy-deep text-navy-foreground">
-          <img src={logo.url} alt="" className="h-12 w-12 rounded-full bg-background opacity-90" />
+          <img src={logo} alt="" className="h-12 w-12 rounded-full bg-background opacity-90" />
           <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest opacity-80">
             {isVideo(a) ? <PlayCircle className="h-3.5 w-3.5" /> : <Newspaper className="h-3.5 w-3.5" />} Serbia 15 Online News
           </span>

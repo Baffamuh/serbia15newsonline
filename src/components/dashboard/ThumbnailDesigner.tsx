@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { uploadMedia } from "@/lib/media";
 
 import { logActivity } from "@/lib/auth";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,7 +47,7 @@ export function ThumbnailDesigner({ headline, category, image, onSaved }: {
   const [photo, setPhoto] = useState<HTMLImageElement | null>(null);
   const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null);
   useEffect(() => { let off = false; if (!src) { setPhoto(null); return; } loadImg(src).then((i) => { if (!off) setPhoto(i); }).catch(() => { if (!off) setPhoto(null); }); return () => { off = true; }; }, [src]);
-  useEffect(() => { let off = false; loadImg(logo.url).then((i) => { if (!off) setLogoImg(i); }).catch(() => {}); return () => { off = true; }; }, []);
+  useEffect(() => { let off = false; loadImg(logo).then((i) => { if (!off) setLogoImg(i); }).catch(() => {}); return () => { off = true; }; }, []);
 
   useEffect(() => {
     const c = canvas.current; if (!c) return; const ctx = c.getContext("2d")!;

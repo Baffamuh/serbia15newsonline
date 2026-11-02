@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/lib/auth";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,7 +87,7 @@ function AuthPage() {
     <div className="flex min-h-screen items-center justify-center bg-navy-deep px-4 py-10">
       <div className="w-full max-w-md rounded-sm bg-card p-8 shadow-xl">
         <Link to="/" className="flex flex-col items-center gap-2">
-          <img src={logo.url} alt="Serbia 15 Online News" className="h-20 w-20 rounded-full" />
+          <img src={logo} alt="Serbia 15 Online News" className="h-20 w-20 rounded-full" />
           <span className="font-display text-xl font-black text-navy">Serbia 15 Online News Newsroom</span>
         </Link>
         <h1 className="mt-6 text-center font-display text-2xl font-bold">

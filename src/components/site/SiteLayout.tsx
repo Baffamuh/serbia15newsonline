@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { Mail, MessageCircle, Phone, Radio, Search, Facebook, Youtube, Instagram, Menu, X } from "lucide-react";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 import { getSettings } from "@/lib/news.functions";
 import { ratioCss } from "@/lib/image-ratio";
 import { useAuth } from "@/lib/auth";
@@ -30,7 +30,7 @@ function Header() {
       <div className="bg-navy-deep text-navy-foreground">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4">
           <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Serbia 15 Online News home">
-            <img src={logo.url} alt="" width={44} height={44} className="h-10 w-10 shrink-0 rounded-full bg-background sm:h-11 sm:w-11" />
+            <img src={logo} alt="" width={44} height={44} className="h-10 w-10 shrink-0 rounded-full bg-background sm:h-11 sm:w-11" />
             <span className="min-w-0 leading-tight">
               <span className="block truncate font-display text-sm font-black tracking-tight sm:text-lg">SERBIA 15 ONLINE NEWS</span>
               <span className="block truncate text-[10px] uppercase tracking-widest opacity-80 sm:text-[11px]">Tashar Al'ummah</span>
@@ -124,7 +124,7 @@ function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3">
-            <img src={logo.url} alt="Serbia 15 Online News logo" width={64} height={64} className="h-16 w-16 rounded-full bg-background" loading="lazy" />
+            <img src={logo} alt="Serbia 15 Online News logo" width={64} height={64} className="h-16 w-16 rounded-full bg-background" loading="lazy" />
             <div>
               <p className="font-display text-xl font-black">Serbia 15 Online News</p>
               <p className="text-sm opacity-80">Tashar Al'ummah</p>
