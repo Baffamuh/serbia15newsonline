@@ -1,4 +1,5 @@
 import { Textarea } from "@/components/ui/textarea";
+import { RATIO_OPTIONS, RATIO_LABEL, DEFAULT_RATIO } from "@/lib/image-ratio";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ const schema = z.object({
   org_whatsapp: z.string().trim().max(30).regex(/^[+\d\s()-]*$/, "WhatsApp number may only contain digits and +"),
   org_email: z.string().trim().email("Enter a valid organisation email").or(z.literal("")),
   org_address: z.string().trim().max(200),
+  card_image_ratio: z.enum(["4:3", "16:9", "3:2", "1:1"]),
 });
 type S = z.infer<typeof schema>;
 const FIELDS: [keyof S, string, string?][] = [
@@ -88,6 +90,7 @@ function SettingsPage() {
       facebook_page_url: data.facebook_page_url ?? "",
       youtube_url: data.youtube_url ?? "", x_url: data.x_url ?? "", instagram_url: data.instagram_url ?? "", tiktok_url: data.tiktok_url ?? "",
       org_phone: data.org_phone ?? "", org_whatsapp: data.org_whatsapp ?? "", org_email: data.org_email ?? "", org_address: data.org_address ?? "",
+      card_image_ratio: (RATIO_OPTIONS as readonly string[]).includes(data.card_image_ratio) ? data.card_image_ratio : DEFAULT_RATIO,
     });
   }, [data]);
   const loadCats = () => supabase.from("categories").select("id,name,slug").order("sort").then(({ data }) => setCats(data ?? []));
@@ -100,7 +103,7 @@ function SettingsPage() {
     const p = schema.safeParse(f);
     if (!p.success) return toast.error(p.error.issues[0]?.message ?? "Invalid input");
     const v = Object.fromEntries(Object.entries(p.data).map(([k, x]) => [k, x === "" ? null : x])) as Record<string, string | null>;
-    const { error } = await supabase.from("site_settings").update({ ...v, org_phone: p.data.org_phone, org_whatsapp: p.data.org_whatsapp, org_email: p.data.org_email, org_address: p.data.org_address, updated_at: new Date().toISOString() }).eq("id", 1);
+    const { error } = await supabase.from("site_settings").update({ ...v, org_phone: p.data.org_phone, org_whatsapp: p.data.org_whatsapp, org_email: p.data.org_email, org_address: p.data.org_address, card_image_ratio: p.data.card_image_ratio, updated_at: new Date().toISOString() }).eq("id", 1);
     if (error) return toast.error(error.message);
     await logActivity("update", "settings", "1");
     qc.invalidateQueries({ queryKey: ["settings"] });
@@ -129,6 +132,29 @@ function SettingsPage() {
       <BroadcastControls />
       <section className="space-y-4 rounded-sm border bg-card p-5">
         <h1 className="font-display text-3xl font-black text-navy">Site settings</h1>
+        <div>
+          <Label>News photo size</Label>
+          <p className="mt-1 text-xs text-muted-foreground">Pick the shape of the photos on news cards across the whole site. Applies after you save.</p>
+          <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="News photo size">
+            {RATIO_OPTIONS.map((r) => {
+              const active = f.card_image_ratio === r;
+              const [w, h] = r.split(":");
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setF({ ...f, card_image_ratio: r })}
+                  className={`flex items-center gap-2 rounded-sm border px-3 py-2 text-sm font-semibold ${active ? "border-brand bg-brand text-brand-foreground" : "border-input bg-background hover:bg-muted"}`}
+                >
+                  <span aria-hidden className="inline-block bg-current opacity-70" style={{ width: 18 * (Number(w) / Number(h)), height: 18 }} />
+                  {RATIO_LABEL[r]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
         {FIELDS.map(([k, label, hint]) => (
           <div key={k}>
             <Label htmlFor={k}>{label}</Label>
