@@ -90,7 +90,7 @@ function SettingsPage() {
       facebook_page_url: data.facebook_page_url ?? "",
       youtube_url: data.youtube_url ?? "", x_url: data.x_url ?? "", instagram_url: data.instagram_url ?? "", tiktok_url: data.tiktok_url ?? "",
       org_phone: data.org_phone ?? "", org_whatsapp: data.org_whatsapp ?? "", org_email: data.org_email ?? "", org_address: data.org_address ?? "",
-      card_image_ratio: (RATIO_OPTIONS as readonly string[]).includes(data.card_image_ratio) ? data.card_image_ratio : DEFAULT_RATIO,
+      card_image_ratio: (RATIO_OPTIONS as readonly string[]).includes(data.card_image_ratio) ? data.card_image_ratio as S["card_image_ratio"] : DEFAULT_RATIO,
     });
   }, [data]);
   const loadCats = () => supabase.from("categories").select("id,name,slug").order("sort").then(({ data }) => setCats(data ?? []));
