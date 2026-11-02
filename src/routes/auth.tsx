@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/lib/auth";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,14 @@ function AuthPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+  // Managed Google sign-in runs through Lovable's OAuth gateway, which only
+  // exists on Lovable-hosted domains. On other hosts (Vercel, custom domains)
+  // the button would 404, so hide it there; email/password works everywhere.
+  const googleAvailable = (() => {
+    if (typeof window === "undefined") return false;
+    const h = window.location.hostname;
+    return h === "localhost" || h.endsWith(".lovable.app") || h.endsWith(".lovable.cloud");
+  })();
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/dashboard", replace: true });
@@ -87,7 +95,7 @@ function AuthPage() {
     <div className="flex min-h-screen items-center justify-center bg-navy-deep px-4 py-10">
       <div className="w-full max-w-md rounded-sm bg-card p-8 shadow-xl">
         <Link to="/" className="flex flex-col items-center gap-2">
-          <img src={logo.url} alt="Serbia 15 Online News" className="h-20 w-20 rounded-full" />
+          <img src={logo} alt="Serbia 15 Online News" className="h-20 w-20 rounded-full" />
           <span className="font-display text-xl font-black text-navy">Serbia 15 Online News Newsroom</span>
         </Link>
         <h1 className="mt-6 text-center font-display text-2xl font-bold">
@@ -107,8 +115,10 @@ function AuthPage() {
             <Button type="submit" className="w-full bg-brand text-brand-foreground hover:bg-brand/90" disabled={busy}>
               {busy ? "Please wait…" : mode === "in" ? "Sign in" : mode === "up" ? "Create account" : "Send reset link"}
             </Button>
-            {mode !== "forgot" && (
-              <Button type="button" variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+            {mode !== "forgot" && googleAvailable && (
+              <>
+                <Button type="button" variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+              </>
             )}
           </form>
         )}

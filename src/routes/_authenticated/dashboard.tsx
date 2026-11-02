@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FileText, PlusCircle, Users, Settings, History, LogOut, Globe } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/serbia15-logo.jpg";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -48,7 +48,7 @@ function DashboardLayout() {
     <div className="min-h-screen bg-muted/40 md:flex">
       <aside className="bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0">
         <div className="flex items-center gap-2 p-4">
-          <img src={logo.url} alt="" className="h-10 w-10 rounded-full bg-background" />
+          <img src={logo} alt="" className="h-10 w-10 rounded-full bg-background" />
           <div className="leading-tight">
             <p className="font-display font-black">SERBIA 15 ONLINE NEWS</p>
             <p className="text-xs opacity-70">Newsroom</p>
