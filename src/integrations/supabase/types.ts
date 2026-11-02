@@ -174,6 +174,7 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          card_image_ratio: string
           facebook_page_url: string
           id: number
           instagram_url: string | null
@@ -192,6 +193,7 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          card_image_ratio?: string
           facebook_page_url?: string
           id?: number
           instagram_url?: string | null
@@ -210,6 +212,7 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          card_image_ratio?: string
           facebook_page_url?: string
           id?: number
           instagram_url?: string | null
@@ -255,6 +258,7 @@ export type Database = {
       get_public_settings: {
         Args: never
         Returns: {
+          card_image_ratio: string
           facebook_page_url: string
           id: number
           instagram_url: string | null
