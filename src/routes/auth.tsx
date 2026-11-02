@@ -107,8 +107,10 @@ function AuthPage() {
             <Button type="submit" className="w-full bg-brand text-brand-foreground hover:bg-brand/90" disabled={busy}>
               {busy ? "Please wait…" : mode === "in" ? "Sign in" : mode === "up" ? "Create account" : "Send reset link"}
             </Button>
-            {mode !== "forgot" && (
-              <Button type="button" variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+            {mode !== "forgot" && googleAvailable && (
+              <>
+                <Button type="button" variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
+              </>
             )}
           </form>
         )}
