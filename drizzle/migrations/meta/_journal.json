@@ -43,6 +43,13 @@
       "when": 1792209838359,
       "tag": "0005_site_settings_restrict_read",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793577654873,
+      "tag": "0006_card_image_ratio_setting",
+      "breakpoints": true
     }
   ]
 }
