@@ -174,6 +174,10 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          adsense_client_id: string | null
+          adsense_slot_article: string | null
+          adsense_slot_sidebar: string | null
+          adsense_slot_top: string | null
           card_image_ratio: string
           facebook_page_url: string
           id: number
@@ -193,6 +197,10 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          adsense_client_id?: string | null
+          adsense_slot_article?: string | null
+          adsense_slot_sidebar?: string | null
+          adsense_slot_top?: string | null
           card_image_ratio?: string
           facebook_page_url?: string
           id?: number
@@ -212,6 +220,10 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          adsense_client_id?: string | null
+          adsense_slot_article?: string | null
+          adsense_slot_sidebar?: string | null
+          adsense_slot_top?: string | null
           card_image_ratio?: string
           facebook_page_url?: string
           id?: number
@@ -258,6 +270,10 @@ export type Database = {
       get_public_settings: {
         Args: never
         Returns: {
+          adsense_client_id: string | null
+          adsense_slot_article: string | null
+          adsense_slot_sidebar: string | null
+          adsense_slot_top: string | null
           card_image_ratio: string
           facebook_page_url: string
           id: number

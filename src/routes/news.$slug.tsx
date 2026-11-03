@@ -5,6 +5,7 @@ import { getArticle } from "@/lib/news.functions";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { EmbedPlayer } from "@/components/site/EmbedPlayer";
 import { NewsCard, SectionTitle, thumbOf } from "@/components/site/NewsCard";
+import { AdSlot } from "@/components/site/AdSlot";
 import { formatDate } from "@/lib/media";
 
 const q = (slug: string) => queryOptions({ queryKey: ["article", slug], queryFn: () => getArticle({ data: { slug } }) });
@@ -66,6 +67,7 @@ function ArticlePage() {
             {a.body.split(/\n{2,}/).map((p, i) => <p key={i} className="whitespace-pre-line">{p}</p>)}
           </div>
         )}
+        <AdSlot slot="in-article" className="mt-8" />
         {(a.gallery_images ?? []).length > 0 && (
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {a.gallery_images.map((g: string, i: number) => (
@@ -90,7 +92,7 @@ function ArticlePage() {
       </article>
       {data.related.length > 0 && (
         <section className="mx-auto max-w-7xl px-4">
-          <SectionTitle>Related stories</SectionTitle>
+          <SectionTitle>Labarai masu alaƙa · Related stories</SectionTitle>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{data.related.map((r) => <NewsCard key={r.id} a={r} size="sm" />)}</div>
         </section>
       )}

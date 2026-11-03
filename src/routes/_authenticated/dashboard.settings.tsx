@@ -21,6 +21,10 @@ const schema = z.object({
   org_email: z.string().trim().email("Enter a valid organisation email").or(z.literal("")),
   org_address: z.string().trim().max(200),
   card_image_ratio: z.enum(["4:3", "16:9", "3:2", "1:1"]),
+  adsense_client_id: z.string().trim().max(40).regex(/^ca-[a-z]+-\d{10,}$/, "Use the publisher ID from your Google AdSense account, e.g. ca-pub-1234567890123456").or(z.literal("")),
+  adsense_slot_top: z.string().trim().max(20).regex(/^\d*$/, "Slot IDs are the numbers in your AdSense ad unit code").or(z.literal("")),
+  adsense_slot_article: z.string().trim().max(20).regex(/^\d*$/, "Slot IDs are the numbers in your AdSense ad unit code").or(z.literal("")),
+  adsense_slot_sidebar: z.string().trim().max(20).regex(/^\d*$/, "Slot IDs are the numbers in your AdSense ad unit code").or(z.literal("")),
 });
 type S = z.infer<typeof schema>;
 const FIELDS: [keyof S, string, string?][] = [
@@ -33,6 +37,10 @@ const FIELDS: [keyof S, string, string?][] = [
   ["x_url", "X (Twitter)"],
   ["instagram_url", "Instagram"],
   ["tiktok_url", "TikTok"],
+  ["adsense_client_id", "Google AdSense publisher ID", "From your AdSense account, e.g. ca-pub-1234567890123456. Leave empty to show labelled ad placeholders instead."],
+  ["adsense_slot_top", "Ad slot ID — top banner (optional)", "The numbers in the ad unit code for the banner at the top of every page."],
+  ["adsense_slot_article", "Ad slot ID — inside stories (optional)", "The numbers in the ad unit code shown inside article pages."],
+  ["adsense_slot_sidebar", "Ad slot ID — homepage sidebar (optional)", "The numbers in the ad unit code shown beside the news on the homepage."],
 ];
 
 function BroadcastControls() {
@@ -91,6 +99,10 @@ function SettingsPage() {
       youtube_url: data.youtube_url ?? "", x_url: data.x_url ?? "", instagram_url: data.instagram_url ?? "", tiktok_url: data.tiktok_url ?? "",
       org_phone: data.org_phone ?? "", org_whatsapp: data.org_whatsapp ?? "", org_email: data.org_email ?? "", org_address: data.org_address ?? "",
       card_image_ratio: (RATIO_OPTIONS as readonly string[]).includes(data.card_image_ratio) ? data.card_image_ratio as S["card_image_ratio"] : DEFAULT_RATIO,
+      adsense_client_id: data.adsense_client_id ?? "",
+      adsense_slot_top: data.adsense_slot_top ?? "",
+      adsense_slot_article: data.adsense_slot_article ?? "",
+      adsense_slot_sidebar: data.adsense_slot_sidebar ?? "",
     });
   }, [data]);
   const loadCats = () => supabase.from("categories").select("id,name,slug").order("sort").then(({ data }) => setCats(data ?? []));
