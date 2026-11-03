@@ -6,16 +6,17 @@ import logo from "@/assets/serbia15-logo.jpg";
 import { getSettings } from "@/lib/news.functions";
 import { ratioCss } from "@/lib/image-ratio";
 import { useAuth } from "@/lib/auth";
+import { AdSlot } from "./AdSlot";
 
 export const NAV = [
-  { to: "/category/$slug", slug: "nigeria", label: "Nigeria" },
-  { to: "/category/$slug", slug: "international", label: "International" },
-  { to: "/category/$slug", slug: "politics", label: "Politics" },
-  { to: "/category/$slug", slug: "business", label: "Business" },
-  { to: "/category/$slug", slug: "education", label: "Education" },
-  { to: "/category/$slug", slug: "security", label: "Security" },
-  { to: "/category/$slug", slug: "entertainment", label: "Entertainment" },
-  { to: "/category/$slug", slug: "sports", label: "Sports" },
+  { slug: "nigeria", ha: "Najeriya", en: "Nigeria" },
+  { slug: "international", ha: "Duniya", en: "International" },
+  { slug: "politics", ha: "Siyasa", en: "Politics" },
+  { slug: "business", ha: "Kuɗi", en: "Business" },
+  { slug: "education", ha: "Ilimi", en: "Education" },
+  { slug: "security", ha: "Tsaro", en: "Security" },
+  { slug: "entertainment", ha: "Nishaɗi", en: "Entertainment" },
+  { slug: "sports", ha: "Wasanni", en: "Sports" },
 ] as const;
 
 export const settingsQuery = { queryKey: ["settings"], queryFn: () => getSettings(), staleTime: 60_000 };
@@ -25,6 +26,9 @@ function Header() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const { session, isStaff } = useAuth();
+  const navLink =
+    "group flex flex-col justify-center whitespace-nowrap px-3 py-1.5 leading-tight hover:bg-navy-deep active:bg-brand";
+  const activeProps = { className: "bg-brand" };
   return (
     <header className="sticky top-0 z-40 bg-background shadow-sm">
       <div className="bg-navy-deep text-navy-foreground">
@@ -44,12 +48,12 @@ function Header() {
               navigate({ to: "/search", search: { q: q.trim() || undefined } });
             }}
           >
-            <label htmlFor="site-search" className="sr-only">Search news</label>
+            <label htmlFor="site-search" className="sr-only">Search news — Bincika labarai</label>
             <input
               id="site-search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search news & videos"
+              placeholder="Bincika labarai & bidiyo…"
               className="w-full rounded-l-sm border-0 bg-navy-foreground/10 px-3 py-2 text-sm text-navy-foreground placeholder:text-navy-foreground/60 focus:outline-none focus:ring-2 focus:ring-brand"
             />
             <button className="rounded-r-sm bg-brand px-3 text-brand-foreground" aria-label="Search">
@@ -60,7 +64,7 @@ function Header() {
             to="/live"
             className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-sm bg-brand px-2.5 py-2 text-xs font-bold uppercase text-brand-foreground sm:px-3 sm:text-sm md:ml-0"
           >
-            <Radio className="h-4 w-4" /> Live
+            <Radio className="h-4 w-4" /> <span className="hidden sm:inline">Live ·</span> Kai tsaye
           </Link>
           {session && (
             <Link to="/dashboard" className="hidden text-sm font-medium opacity-90 hover:opacity-100 sm:inline">
@@ -73,16 +77,29 @@ function Header() {
         </div>
       </div>
       <nav className="border-b-4 border-brand bg-navy text-navy-foreground" aria-label="Sections">
-        <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-2 text-sm font-semibold [scrollbar-width:none]">
-          <Link to="/" className="whitespace-nowrap px-3 py-2.5 hover:bg-navy-deep" activeOptions={{ exact: true }} activeProps={{ className: "bg-brand" }}>Home</Link>
+        <div className="mx-auto flex max-w-7xl gap-0.5 overflow-x-auto px-2 text-sm font-semibold [scrollbar-width:none]">
+          <Link to="/" className={navLink} activeOptions={{ exact: true }} activeProps={activeProps}>
+            <span>Babban Shafi</span>
+            <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">Home</span>
+          </Link>
           {NAV.map((n) => (
-            <Link key={n.slug} to={n.to} params={{ slug: n.slug }} className="whitespace-nowrap px-3 py-2.5 hover:bg-navy-deep" activeProps={{ className: "bg-brand" }}>
-              {n.label}
+            <Link key={n.slug} to="/category/$slug" params={{ slug: n.slug }} className={navLink} activeProps={activeProps}>
+              <span>{n.ha}</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">{n.en}</span>
             </Link>
           ))}
-          <Link to="/videos" search={{ format: "interview" }} className="whitespace-nowrap px-3 py-2.5 hover:bg-navy-deep">Interviews</Link>
-          <Link to="/videos" search={{ format: "documentary" }} className="whitespace-nowrap px-3 py-2.5 hover:bg-navy-deep">Documentaries</Link>
-          <Link to="/videos" className="whitespace-nowrap px-3 py-2.5 hover:bg-navy-deep" activeProps={{ className: "bg-brand" }}>Videos</Link>
+          <Link to="/videos" search={{ format: "interview" }} className={navLink} activeProps={activeProps}>
+            <span>Hira</span>
+            <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">Interviews</span>
+          </Link>
+          <Link to="/videos" search={{ format: "documentary" }} className={navLink} activeProps={activeProps}>
+            <span>Kasidoli</span>
+            <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">Documentaries</span>
+          </Link>
+          <Link to="/videos" className={navLink} activeProps={activeProps}>
+            <span>Bidiyo</span>
+            <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">Videos</span>
+          </Link>
         </div>
       </nav>
       {open && (
@@ -96,7 +113,7 @@ function Header() {
               navigate({ to: "/search", search: { q: q.trim() || undefined } });
             }}
           >
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search news & videos" aria-label="Search news" className="w-full min-w-0 rounded-l-sm border px-3 py-2 text-base" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Bincika labarai & bidiyo…" aria-label="Search news — Bincika labarai" className="w-full min-w-0 rounded-l-sm border px-3 py-2 text-base" />
             <button className="rounded-r-sm bg-brand px-3 text-brand-foreground" aria-label="Search"><Search className="h-4 w-4" /></button>
           </form>
           {session && (
@@ -139,18 +156,22 @@ function Footer() {
           </div>
         </div>
         <div>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Sections</h2>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Sashe · Sections</h2>
           <ul className="grid grid-cols-2 gap-1.5 text-sm">
             {NAV.map((n) => (
-              <li key={n.slug}><Link to={n.to} params={{ slug: n.slug }} className="opacity-85 hover:underline">{n.label}</Link></li>
+              <li key={n.slug}>
+                <Link to="/category/$slug" params={{ slug: n.slug }} className="opacity-85 hover:underline">
+                  {n.ha} <span className="opacity-60">({n.en})</span>
+                </Link>
+              </li>
             ))}
-            <li><Link to="/videos" className="opacity-85 hover:underline">Videos</Link></li>
-            <li><Link to="/live" className="opacity-85 hover:underline">Live TV</Link></li>
-            <li><Link to="/search" className="opacity-85 hover:underline">News archive</Link></li>
+            <li><Link to="/videos" className="opacity-85 hover:underline">Bidiyo (Videos)</Link></li>
+            <li><Link to="/live" className="opacity-85 hover:underline">Kai tsaye (Live TV)</Link></li>
+            <li><Link to="/search" className="opacity-85 hover:underline">Bincika labarai (Archive)</Link></li>
           </ul>
         </div>
         <div>
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Contact the newsroom</h2>
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Tuntube mu · Contact the newsroom</h2>
           {s?.org_phone || s?.org_email || s?.org_whatsapp || s?.org_address ? (
             <>
               {s.org_address && <p className="text-sm">{s.org_address}</p>}
@@ -199,6 +220,9 @@ export function SiteLayout({ children, ticker }: { children: ReactNode; ticker?:
         </Link>
       )}
       {ticker}
+      <div className="mx-auto w-full max-w-7xl px-4 pt-5">
+        <AdSlot slot="leaderboard" />
+      </div>
       <main id="main" className="min-w-0 flex-1">{children}</main>
       <Footer />
     </div>
