@@ -50,6 +50,13 @@
       "when": 1793577654873,
       "tag": "0006_card_image_ratio_setting",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793689967511,
+      "tag": "0007_adsense_settings",
+      "breakpoints": true
     }
   ]
 }
