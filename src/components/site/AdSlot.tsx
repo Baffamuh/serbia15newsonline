@@ -34,7 +34,7 @@ export function AdSlot({ slot, className }: { slot: AdSlotName; className?: stri
       const el = document.createElement("script");
       el.async = true;
       el.crossOrigin = "anonymous";
-      el.dataset.adsense = "1";
+      el.dataset["adsense"] = "1";
       el.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(clientId)}`;
       document.head.appendChild(el);
     }
