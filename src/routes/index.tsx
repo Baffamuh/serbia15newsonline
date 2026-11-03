@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getHome, type NewsCard as Card } from "@/lib/news.functions";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { EmptyState, NewsCard, SectionTitle, Meta } from "@/components/site/NewsCard";
+import { AdSlot } from "@/components/site/AdSlot";
 
 const homeQuery = queryOptions({ queryKey: ["home"], queryFn: () => getHome(), staleTime: 30_000 });
 
@@ -26,7 +27,7 @@ export function BreakingTicker({ items }: { items: { id: string; title: string; 
   return (
     <div className="border-b bg-brand text-brand-foreground">
       <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-hidden px-4 py-2 text-sm">
-        <span className="shrink-0 rounded-sm bg-brand-foreground px-2 py-0.5 text-xs font-black uppercase tracking-wider text-brand">Breaking</span>
+        <span className="shrink-0 rounded-sm bg-brand-foreground px-2 py-0.5 text-xs font-black uppercase tracking-wider text-brand">Sabon labari · Breaking</span>
         <div className="flex gap-6 overflow-x-auto whitespace-nowrap [scrollbar-width:none]">
           {items.map((b) => (
             <Link key={b.id} to="/news/$slug" params={{ slug: b.slug }} className="font-semibold hover:underline">{b.title}</Link>
@@ -73,7 +74,7 @@ function Home() {
 
             <div className="mt-12 grid gap-10 lg:grid-cols-12">
               <section className="lg:col-span-8">
-                <SectionTitle action={<Link to="/search" className="text-sm font-semibold text-brand hover:underline">All news →</Link>}>Latest</SectionTitle>
+                <SectionTitle action={<Link to="/search" className="text-sm font-semibold text-brand hover:underline">All news →</Link>}>Sababun labarai · Latest</SectionTitle>
                 {latest.length ? (
                   <div className="grid gap-6 sm:grid-cols-2">{latest.map((a) => <NewsCard key={a.id} a={a} />)}</div>
                 ) : (
@@ -81,7 +82,7 @@ function Home() {
                 )}
               </section>
               <aside className="lg:col-span-4">
-                <SectionTitle>Trending</SectionTitle>
+                <SectionTitle>Mafi karantawa · Trending</SectionTitle>
                 {data.trending.length ? (
                   <ol className="space-y-4">
                     {data.trending.map((a, i) => (
@@ -97,6 +98,7 @@ function Home() {
                 ) : (
                   <p className="text-sm text-muted-foreground">No trending stories selected yet.</p>
                 )}
+                <AdSlot slot="sidebar" className="mt-8" />
                 <Link to="/live" className="mt-8 block rounded-sm bg-navy p-5 text-navy-foreground">
                   <span className="text-xs font-black uppercase tracking-widest text-brand">● Live TV</span>
                   <p className="mt-1 font-display text-xl font-bold">Watch Serbia 15 Online News Live</p>
@@ -108,7 +110,7 @@ function Home() {
             {data.videos.length > 0 && (
               <section className="mt-12 -mx-4 bg-navy-deep px-4 py-8 text-navy-foreground md:rounded-sm">
                 <div className="mb-4 flex items-end justify-between border-b border-navy-foreground/20 pb-2">
-                  <h2 className="font-display text-xl font-black uppercase">Videos, Interviews & Documentaries</h2>
+                  <h2 className="font-display text-xl font-black uppercase">Bidiyo, Hira & Kasidoli · Videos</h2>
                   <Link to="/videos" className="text-sm font-semibold text-brand hover:underline">All videos →</Link>
                 </div>
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 [&_h3]:text-navy-foreground [&_p]:text-navy-foreground/70">
