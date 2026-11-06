@@ -96,9 +96,9 @@ export function getEmbed(url?: string | null): Embed {
 
 export function slugify(s: string) {
   return (
-    s.toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g, "").trim().replace(/[\s_-]+/g, "-").slice(0, 80) +
+    (s.toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g, "").trim().split(/[\s_-]+/).filter(Boolean).slice(0, 3).join("-").slice(0, 24).replace(/-+$/, "") || "labari") +
     "-" +
-    Math.random().toString(36).slice(2, 7)
+    Math.random().toString(36).slice(2, 6)
   );
 }
 
