@@ -37,6 +37,7 @@ function DashboardLayout() {
     { to: "/dashboard/editor", label: "New story", Icon: PlusCircle },
     ...(isAdmin
       ? [
+          { to: "/dashboard/visitors", label: "Visitors", Icon: BarChart3 },
           { to: "/dashboard/staff", label: "Staff", Icon: Users },
           { to: "/dashboard/settings", label: "Site settings", Icon: Settings },
           { to: "/dashboard/activity", label: "Activity log", Icon: History },

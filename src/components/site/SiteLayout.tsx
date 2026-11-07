@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { Mail, MessageCircle, Phone, Radio, Search, Facebook, Youtube, Instagram, Menu, X } from "lucide-react";
@@ -201,7 +202,19 @@ function Footer() {
   );
 }
 
+function useVisitCounter() {
+  const path = useLocation({ select: (l) => l.pathname });
+  useEffect(() => {
+    try {
+      let id = localStorage.getItem("s15_vid");
+      if (!id) { id = crypto.randomUUID(); localStorage.setItem("s15_vid", id); }
+      void supabase.rpc("record_visit", { _visitor: id, _path: path });
+    } catch { /* counting is best-effort */ }
+  }, [path]);
+}
+
 export function SiteLayout({ children, ticker }: { children: ReactNode; ticker?: ReactNode }) {
+  useVisitCounter();
   const { data: s } = useQuery(settingsQuery);
   useEffect(() => {
     document.documentElement.style.setProperty("--card-ratio", ratioCss(s?.card_image_ratio));
