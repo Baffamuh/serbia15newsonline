@@ -19,12 +19,15 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
+import { Route as NIndexRouteImport } from './routes/n.index'
+import { Route as NCodeRouteImport } from './routes/n.$code'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardActivityRouteImport } from './routes/_authenticated/dashboard.activity'
 import { Route as AuthenticatedDashboardEditorRouteImport } from './routes/_authenticated/dashboard.editor'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardStaffRouteImport } from './routes/_authenticated/dashboard.staff'
+import { Route as AuthenticatedDashboardVisitorsRouteImport } from './routes/_authenticated/dashboard.visitors'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -75,6 +78,16 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NIndexRoute = NIndexRouteImport.update({
+  id: '/n/',
+  path: '/n/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NCodeRoute = NCodeRouteImport.update({
+  id: '/n/$code',
+  path: '/n/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
@@ -110,6 +123,12 @@ const AuthenticatedDashboardStaffRoute =
     path: '/staff',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardVisitorsRoute =
+  AuthenticatedDashboardVisitorsRouteImport.update({
+    id: '/visitors',
+    path: '/visitors',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -121,11 +140,14 @@ export interface FileRoutesByFullPath {
   '/videos': typeof VideosRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/category/$slug': typeof CategorySlugRoute
+  '/n/$code': typeof NCodeRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/n/': typeof NIndexRoute
   '/dashboard/activity': typeof AuthenticatedDashboardActivityRoute
   '/dashboard/editor': typeof AuthenticatedDashboardEditorRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/staff': typeof AuthenticatedDashboardStaffRoute
+  '/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -137,11 +159,14 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/videos': typeof VideosRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/n/$code': typeof NCodeRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/n': typeof NIndexRoute
   '/dashboard/activity': typeof AuthenticatedDashboardActivityRoute
   '/dashboard/editor': typeof AuthenticatedDashboardEditorRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/staff': typeof AuthenticatedDashboardStaffRoute
+  '/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -156,11 +181,14 @@ export interface FileRoutesById {
   '/videos': typeof VideosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/category/$slug': typeof CategorySlugRoute
+  '/n/$code': typeof NCodeRoute
   '/news/$slug': typeof NewsSlugRoute
+  '/n/': typeof NIndexRoute
   '/_authenticated/dashboard/activity': typeof AuthenticatedDashboardActivityRoute
   '/_authenticated/dashboard/editor': typeof AuthenticatedDashboardEditorRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/staff': typeof AuthenticatedDashboardStaffRoute
+  '/_authenticated/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -175,11 +203,14 @@ export interface FileRouteTypes {
     | '/videos'
     | '/dashboard'
     | '/category/$slug'
+    | '/n/$code'
     | '/news/$slug'
+    | '/n/'
     | '/dashboard/activity'
     | '/dashboard/editor'
     | '/dashboard/settings'
     | '/dashboard/staff'
+    | '/dashboard/visitors'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -191,11 +222,14 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/videos'
     | '/category/$slug'
+    | '/n/$code'
     | '/news/$slug'
+    | '/n'
     | '/dashboard/activity'
     | '/dashboard/editor'
     | '/dashboard/settings'
     | '/dashboard/staff'
+    | '/dashboard/visitors'
     | '/dashboard'
   id:
     | '__root__'
@@ -209,11 +243,14 @@ export interface FileRouteTypes {
     | '/videos'
     | '/_authenticated/dashboard'
     | '/category/$slug'
+    | '/n/$code'
     | '/news/$slug'
+    | '/n/'
     | '/_authenticated/dashboard/activity'
     | '/_authenticated/dashboard/editor'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/staff'
+    | '/_authenticated/dashboard/visitors'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -227,7 +264,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VideosRoute: typeof VideosRoute
   CategorySlugRoute: typeof CategorySlugRoute
+  NCodeRoute: typeof NCodeRoute
   NewsSlugRoute: typeof NewsSlugRoute
+  NIndexRoute: typeof NIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -302,6 +341,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/n/': {
+      id: '/n/'
+      path: '/n'
+      fullPath: '/n/'
+      preLoaderRoute: typeof NIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/n/$code': {
+      id: '/n/$code'
+      path: '/n/$code'
+      fullPath: '/n/$code'
+      preLoaderRoute: typeof NCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news/$slug': {
       id: '/news/$slug'
       path: '/news/$slug'
@@ -344,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardStaffRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/visitors': {
+      id: '/_authenticated/dashboard/visitors'
+      path: '/visitors'
+      fullPath: '/dashboard/visitors'
+      preLoaderRoute: typeof AuthenticatedDashboardVisitorsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
   }
 }
 
@@ -352,6 +412,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardEditorRoute: typeof AuthenticatedDashboardEditorRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardStaffRoute: typeof AuthenticatedDashboardStaffRoute
+  AuthenticatedDashboardVisitorsRoute: typeof AuthenticatedDashboardVisitorsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -361,6 +422,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardEditorRoute: AuthenticatedDashboardEditorRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardStaffRoute: AuthenticatedDashboardStaffRoute,
+    AuthenticatedDashboardVisitorsRoute: AuthenticatedDashboardVisitorsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
@@ -390,7 +452,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VideosRoute: VideosRoute,
   CategorySlugRoute: CategorySlugRoute,
+  NCodeRoute: NCodeRoute,
   NewsSlugRoute: NewsSlugRoute,
+  NIndexRoute: NIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
