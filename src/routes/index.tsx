@@ -74,7 +74,7 @@ function Home() {
 
             <div className="mt-12 grid gap-10 lg:grid-cols-12">
               <section className="lg:col-span-8">
-                <SectionTitle action={<Link to="/search" className="text-sm font-semibold text-brand hover:underline">All news →</Link>}>Sababun labarai · Latest</SectionTitle>
+                <SectionTitle action={<span className="flex gap-3"><Link to="/n" className="text-sm font-semibold text-navy hover:underline">Short links</Link><Link to="/search" className="text-sm font-semibold text-brand hover:underline">All news →</Link></span>}>Sababun labarai · Latest</SectionTitle>
                 {latest.length ? (
                   <div className="grid gap-6 sm:grid-cols-2">{latest.map((a) => <NewsCard key={a.id} a={a} />)}</div>
                 ) : (

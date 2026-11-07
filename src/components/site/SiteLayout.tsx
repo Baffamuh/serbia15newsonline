@@ -159,6 +159,7 @@ function Footer() {
         <div>
           <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Sashe · Sections</h2>
           <ul className="grid grid-cols-2 gap-1.5 text-sm">
+            <li><Link to="/n" className="opacity-85 hover:underline">Gajerun hanyoyi <span className="opacity-60">(Short links)</span></Link></li>
             {NAV.map((n) => (
               <li key={n.slug}>
                 <Link to="/category/$slug" params={{ slug: n.slug }} className="opacity-85 hover:underline">
