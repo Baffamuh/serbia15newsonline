@@ -41,7 +41,7 @@ function ArticlePage() {
   const a = data.article;
   const video = a.video_url ?? (a.format !== "article" ? a.facebook_url : null);
   const fbPostEmbed = !video && a.facebook_url ? a.facebook_url : null;
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = typeof window !== "undefined" ? (a.short_code ? `${window.location.origin}/n/${a.short_code}` : window.location.href) : "";
   return (
     <SiteLayout>
       <article className="mx-auto max-w-3xl px-4 py-8">
