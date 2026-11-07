@@ -63,6 +63,7 @@ export type Database = {
           is_featured: boolean
           is_trending: boolean
           publish_at: string
+          short_code: string | null
           slug: string
           source_url: string | null
           status: Database["public"]["Enums"]["content_status"]
@@ -86,6 +87,7 @@ export type Database = {
           is_featured?: boolean
           is_trending?: boolean
           publish_at?: string
+          short_code?: string | null
           slug: string
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -109,6 +111,7 @@ export type Database = {
           is_featured?: boolean
           is_trending?: boolean
           publish_at?: string
+          short_code?: string | null
           slug?: string
           source_url?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -244,6 +247,27 @@ export type Database = {
         }
         Relationships: []
       }
+      site_visits: {
+        Row: {
+          created_at: string
+          id: number
+          path: string
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          path: string
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          path?: string
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -267,6 +291,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gen_short_code: { Args: never; Returns: string }
       get_public_settings: {
         Args: never
         Returns: {
@@ -308,6 +333,10 @@ export type Database = {
       }
       is_editor: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      record_visit: {
+        Args: { _path: string; _visitor: string }
+        Returns: undefined
+      }
       set_live_broadcast: {
         Args: {
           _active: boolean
@@ -317,6 +346,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      visit_stats: { Args: never; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "editor" | "reporter"

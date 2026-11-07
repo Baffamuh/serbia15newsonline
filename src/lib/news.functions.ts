@@ -3,12 +3,13 @@ import { z } from "zod";
 import { publicClient } from "./public-client.server";
 
 export const CARD_FIELDS =
-  "id,title,slug,summary,format,publish_at,cover_image_url,video_url,facebook_url,is_featured,is_breaking,is_trending,author_name,category:categories(slug,name)";
+  "id,title,slug,short_code,summary,format,publish_at,cover_image_url,video_url,facebook_url,is_featured,is_breaking,is_trending,author_name,category:categories(slug,name)";
 
 export type NewsCard = {
   id: string;
   title: string;
   slug: string;
+  short_code: string | null;
   summary: string;
   format: "article" | "video" | "interview" | "documentary";
   publish_at: string;
@@ -105,3 +106,18 @@ export const getSettings = createServerFn({ method: "GET" }).handler(async () =>
   return data;
 });
 
+
+export const listShortLinks = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await publicClient()
+    .from("articles").select("id,title,slug,short_code,summary,publish_at,category:categories(slug,name)")
+    .order("publish_at", { ascending: false }).limit(300);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as Pick<NewsCard, "id" | "title" | "slug" | "short_code" | "summary" | "publish_at" | "category">[];
+});
+
+export const resolveShortCode = createServerFn({ method: "GET" })
+  .inputValidator((d: { code: string }) => z.object({ code: z.string().min(3).max(12) }).parse(d))
+  .handler(async ({ data }) => {
+    const { data: a } = await publicClient().from("articles").select("slug").eq("short_code", data.code.toLowerCase()).maybeSingle();
+    return a?.slug ?? null;
+  });

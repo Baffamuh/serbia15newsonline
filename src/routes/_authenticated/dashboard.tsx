@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileText, PlusCircle, Users, Settings, History, LogOut, Globe } from "lucide-react";
+import { FileText, PlusCircle, Users, Settings, History, LogOut, Globe, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import logo from "@/assets/serbia15-logo.jpg";
@@ -37,6 +37,7 @@ function DashboardLayout() {
     { to: "/dashboard/editor", label: "New story", Icon: PlusCircle },
     ...(isAdmin
       ? [
+          { to: "/dashboard/visitors", label: "Visitors", Icon: BarChart3 },
           { to: "/dashboard/staff", label: "Staff", Icon: Users },
           { to: "/dashboard/settings", label: "Site settings", Icon: Settings },
           { to: "/dashboard/activity", label: "Activity log", Icon: History },

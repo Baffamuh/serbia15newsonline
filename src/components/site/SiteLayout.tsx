@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { Mail, MessageCircle, Phone, Radio, Search, Facebook, Youtube, Instagram, Menu, X } from "lucide-react";
@@ -158,6 +159,7 @@ function Footer() {
         <div>
           <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-brand">Sashe · Sections</h2>
           <ul className="grid grid-cols-2 gap-1.5 text-sm">
+            <li><Link to="/n" className="opacity-85 hover:underline">Gajerun hanyoyi <span className="opacity-60">(Short links)</span></Link></li>
             {NAV.map((n) => (
               <li key={n.slug}>
                 <Link to="/category/$slug" params={{ slug: n.slug }} className="opacity-85 hover:underline">
@@ -201,7 +203,19 @@ function Footer() {
   );
 }
 
+function useVisitCounter() {
+  const path = useLocation({ select: (l) => l.pathname });
+  useEffect(() => {
+    try {
+      let id = localStorage.getItem("s15_vid");
+      if (!id) { id = crypto.randomUUID(); localStorage.setItem("s15_vid", id); }
+      void supabase.rpc("record_visit", { _visitor: id, _path: path });
+    } catch { /* counting is best-effort */ }
+  }, [path]);
+}
+
 export function SiteLayout({ children, ticker }: { children: ReactNode; ticker?: ReactNode }) {
+  useVisitCounter();
   const { data: s } = useQuery(settingsQuery);
   useEffect(() => {
     document.documentElement.style.setProperty("--card-ratio", ratioCss(s?.card_image_ratio));
