@@ -16,3 +16,5 @@
 - Media bucket is private; uploads get long-lived signed URLs — workspace blocks public buckets.
 - Facebook import resolves share links, then uses Graph oEmbed (optional META_ACCESS_TOKEN or META_APP_ID+META_APP_SECRET, server-only) plus public Open Graph; results are imported / embed_only / failed and never fabricated — direct page scraping is login-walled.
 - Server Supabase clients fall back to build-time VITE_* public values so external hosts (Vercel) work without configured env vars.
+- Share links use `articles.short_code` (5 chars) at `/n/$code`, which 301-redirects to `/news/$slug` — old long slugs stay valid so earlier shared links never break.
+- Visitor counts come from `site_visits` via SECURITY DEFINER `record_visit` (anon) and admin-only `visit_stats` — the browser cannot read raw visit rows.
